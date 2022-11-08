@@ -17,15 +17,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import entities.User;
 import errorhandling.API_Exception;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import security.errorhandling.AuthenticationException;
 import errorhandling.GenericExceptionMapper;
 import javax.persistence.EntityManagerFactory;
+import javax.ws.rs.core.SecurityContext;
+
 import utils.EMF_Creator;
 
 @Path("login")
@@ -34,6 +37,9 @@ public class LoginEndpoint {
     public static final int TOKEN_EXPIRE_TIME = 1000 * 60 * 30; //30 min
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     public static final UserFacade USER_FACADE = UserFacade.getUserFacade(EMF);
+
+    @Context
+    SecurityContext securityContext;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -90,5 +96,12 @@ public class LoginEndpoint {
         signedJWT.sign(signer);
         return signedJWT.serialize();
 
+    }
+
+    @HEAD
+    @Path("validate")
+    @PermitAll
+    public Response validateToken() {
+        return Response.ok().build();
     }
 }
