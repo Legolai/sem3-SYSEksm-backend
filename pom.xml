@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dat.sem3</groupId>
-    <artifactId>devops-starter</artifactId>
+    <artifactId>sem3-CA2-backend-template</artifactId>
     <version>1.0.1</version>
     <packaging>war</packaging>
 
-    <name>dat3-startcode</name>
+    <name>sem3-CA2-backend-template</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -121,22 +121,22 @@
     </dependencies>
 
     <build>
-       
+
         <plugins>
             <!-- Plugin used to deploy to remote server -->
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
-                <configuration>          
+                <configuration>
                     <server>TomcatServer</server>
                     <url>${remote.server}</url>
                     <username>${remote.user}</username>
                     <password>${remote.password}</password>
-                    <update>true</update>    
-                </configuration>  
-            </plugin>          
-            
+                    <update>true</update>
+                </configuration>
+            </plugin>
+
             <!--This is used to enable @BeforeAll etc used in jUnit 5 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -155,22 +155,21 @@
                     </dependency>
                 </dependencies>
             </plugin>
-           
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <compilerArguments>
                         <endorseddirs>${endorsed.dir}</endorseddirs>
                     </compilerArguments>
                     <compilerArgs>
                         <!-- Comment in (and dont forget out) as required -->
                         <!-- <arg>-verbose</arg>-->
-                        <!--<arg>-Xlint:unchecked</arg>-->
-                        <!--<arg>-Xlint:deprecation</arg>-->
+                        <!-- <arg>-Xlint:unchecked</arg>-->
                     </compilerArgs>
                 </configuration>
             </plugin>
