@@ -11,3 +11,12 @@ Content-Type: application/json
 ###
 GET http://localhost:8080/devops_starter_war_exploded/api/info/admin
 x-access-token:eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjoiYWRtaW4iLCJleHAiOjE2NjcyOTYyMTAsImlhdCI6MTY2NzI5NDQxMCwiaXNzdWVyIjoic2VtZXN0ZXJzdGFydGNvZGUtZGF0MyIsInVzZXJuYW1lIjoiYWRtaW4ifQ.dlsMNiQc_OYU2HCa-WMzNImQ3qoNy2CGXEWAbXBQM3g"
+
+
+###
+POST http://localhost:8080/api/api2/
+Content-Type: application/json
+
+{
+  "City": "Beijing"
+}
