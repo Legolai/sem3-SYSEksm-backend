@@ -2,7 +2,7 @@ name: Github actions with maven build and deploy
 on: 
   push:
     branches: 
-    - main
+      - main
 jobs:
   Do-the-travis-thing:
     runs-on: ubuntu-20.04 #or ubuntu-latest
@@ -18,14 +18,14 @@ jobs:
         uses: actions/checkout@v2
       - name: setup jdk 11
         uses: actions/setup-java@v2
-        with: 
+        with:
           java-version: '11'
           distribution: 'adopt' # openjdk see the setup java action: https://github.com/actions/setup-java
-      # - name: Set up MySQL
-      #   run: |
-      #     sudo /etc/init.d/mysql start
-      #     mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
-      # - name: setup mysql
+        # - name: Set up MySQL
+        #   run: |
+        #     sudo /etc/init.d/mysql start
+        #     mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+        # - name: setup mysql
         # run: |
         #   mysql -u root -e "CREATE User 'dev'@'localhost' IDENTIFIED BY 'ax2'; GRANT ALL PRIVILEGES ON *.* TO 'dev'@'localhost' WITH GRANT OPTION;"
         #   mysql -u dev -pax2 -e "CREATE DATABASE IF NOT EXISTS startcode_test;"
@@ -51,7 +51,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2 # the action searches for partial matches of the restore keys. When the action finds a partial match, the most recent cache is restored to the path directory.
       - name: Maven verify
         run: mvn test
-      - name: Maven deploy
-      # Some problem with Tomcat prevents deployment: Sometimes when tomcat fails to unregister the JDBC driver a thread is created called: [mysql-cj-abandoned-connection-cleanup]. If this happens Tomcat cannot undeploy the application and the following will not work.
-      # Solution: restart the tomcat container.
+      - name: Maven deploy Backend
+        # Some problem with Tomcat prevents deployment: Sometimes when tomcat fails to unregister the JDBC driver a thread is created called: [mysql-cj-abandoned-connection-cleanup]. If this happens Tomcat cannot undeploy the application and the following will not work.
+        # Solution: restart the tomcat container.
         run: mvn -Dremote.user=${{ secrets.REMOTE_USER }} -Dremote.password=${{ secrets.REMOTE_PW }} tomcat7:deploy
