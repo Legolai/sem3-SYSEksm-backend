@@ -54,4 +54,4 @@ jobs:
       - name: Maven deploy Backend
         # Some problem with Tomcat prevents deployment: Sometimes when tomcat fails to unregister the JDBC driver a thread is created called: [mysql-cj-abandoned-connection-cleanup]. If this happens Tomcat cannot undeploy the application and the following will not work.
         # Solution: restart the tomcat container.
-        run: mvn -e -X -Dremote.user=${{ secrets.REMOTE_USER }} -Dremote.password=${{ secrets.REMOTE_PW }} tomcat7:deploy
+        run: mvn -Dremote.user=${{ secrets.REMOTE_USER }} -Dremote.password=${{ secrets.REMOTE_PW }} tomcat7:deploy
