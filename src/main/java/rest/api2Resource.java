@@ -48,33 +48,15 @@ public class api2Resource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getXWeatherInC(String content) throws IOException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String res = HttpUtils.fetchData(urlBase);
-        City city = gson.fromJson(res, City.class);
-        System.out.println(city.toString());
+        Object city = gson.fromJson(content, Object.class);
+        String cityName = city.toString().substring(6,city.toString().length()-1);
 
-        String url = urlGet.replace("x", city.getCityName());
-        String weather = HttpUtils.fetchData(url);
-        weatherDTO weatherDTO = gson.fromJson(weather, weatherDTO.class);
-        String weatherData = gson.toJson(weatherDTO);
+        String url = urlGet.replace("x", cityName);
+        String res = HttpUtils.fetchData(url);
+        weatherDTO weather = gson.fromJson(res, weatherDTO.class);
+        String weatherData = gson.toJson(weather);
 
         return weatherData;
-    }
-
-    private class City {
-        private String cityName;
-        public City(String cityName) {
-            this.cityName = cityName;
-        }
-        public String getCityName() {
-            return cityName;
-        }
-        public void setCityName(String cityName) {
-            this.cityName = cityName;
-        }
-        @Override
-        public String toString() {
-            return "City{" + "cityName='" + cityName + '\'' + '}';
-        }
     }
 
 }
