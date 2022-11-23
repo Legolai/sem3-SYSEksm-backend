@@ -1,0 +1,40 @@
+@startuml "Domain Model"
+
+
+object FoocleBusiness
+object Account
+object BusinessAccount
+object FoocleScout
+object FoocleSpot 
+object SpotMenu 
+object Location 
+object ScoutRequest
+object RequestHistory
+object Review 
+object Notification 
+object NotificationHistory 
+
+Location "1" *-- "*" Review
+FoocleBusiness "1" *-- "*" Review
+FoocleScout "1" *-- "*" Review
+
+FoocleScout "1" --* "1" Account
+BusinessAccount "1" --* "1" Account
+RequestHistory "1" *-- "1" FoocleScout
+
+SpotMenu "1" *-- "*" ScoutRequest
+RequestHistory "1" *-- "*" ScoutRequest
+ 
+FoocleSpot "1" *-- "*" SpotMenu
+FoocleBusiness "1" *-- "*" FoocleSpot
+
+Account "*" --* "1" Location
+FoocleBusiness "1" --* "1" Location
+
+FoocleBusiness "1" *-- "*" BusinessAccount
+FoocleSpot "1" --* "1" Location
+Notification "*" *-- "1" ScoutRequest
+NotificationHistory "1" *-- "*" Notification
+Account "1" *-- "1" NotificationHistory
+
+@enduml

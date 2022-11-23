@@ -1,0 +1,53 @@
+@startuml "Use case diagram"
+left to right direction
+
+actor/ "Business with canteen" as bc
+actor/ "FoocleBusiness Account" as bfc
+actor "Private person" as pp
+actor "FoocleScout account" as fs
+actor/ "Virk" as vk <<API>>
+actor/ "Google Maps" as gm <<API>>
+
+
+rectangle Foocle {
+  rectangle FoocleBusiness{
+    usecase/ "Create a business Foocle account" as UC1
+    usecase/ "Create a FoocleSpot" as UC2
+    usecase/ "Create a FoocleMenu" as UC3
+    usecase/ "View requests on FoocleMenus" as UC4
+    usecase/ "Accept or denied request on a FoocleMenu" as UC5
+    
+  }
+
+  rectangle FooclePrivate{
+    usecase "Create a FoocleScout account" as UC6
+    usecase "View FoolceSpots" as UC7
+    usecase "View FoocleMenu for a FoocleSpot" as UC8
+    usecase "Make request for FoocleMenu" as UC9
+  }
+
+  usecase "Edit Account details" as UC10
+}
+
+
+
+bc -- UC1
+UC1 -- vk
+bfc -- UC2
+bfc -- UC3
+bfc -- UC4
+bfc -- UC5
+
+pp -- UC6
+fs -- UC7
+fs -- UC8
+UC8 -- gm
+fs -- UC9
+
+bfc -- UC10
+UC10 "Business save new details" -- vk
+fs -- UC10
+
+
+
+@enduml
