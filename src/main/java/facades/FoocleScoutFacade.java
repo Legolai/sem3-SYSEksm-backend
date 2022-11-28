@@ -52,9 +52,9 @@ public class FoocleScoutFacade {
         return user;
     }
 
-    public FoocleScoutDTO createScout(String firstname, String lastname, String email, String password, String phoneNumber, String areaCode) {
+    public FoocleScoutDTO createScout(String email, String firstname, String lastname, String password, String phoneNumber, String areaCode) {
         Phone phone = new Phone(phoneNumber, areaCode);
-        Account account = new Account(firstname, lastname, email, password, phone);
+        Account account = new Account(email, firstname, lastname, password, phone);
         FoocleScout scout = new FoocleScout(account);
 
         executeInsideTransaction(em -> {

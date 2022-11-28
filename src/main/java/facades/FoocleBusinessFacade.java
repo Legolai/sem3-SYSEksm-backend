@@ -65,6 +65,7 @@ public class FoocleBusinessFacade {
 //            em.persist(businessAccount);
 //        });
         executeInsideTransaction(em -> em.persist(location));
+        System.out.println(foocleBusiness.toString());
         executeInsideTransaction(em -> em.persist(foocleBusiness));
         executeInsideTransaction(em -> em.persist(phone));
         executeInsideTransaction(em -> em.persist(account));

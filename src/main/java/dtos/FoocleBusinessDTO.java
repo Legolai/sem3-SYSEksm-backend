@@ -3,7 +3,7 @@ package dtos;
 import entities.FoocleBusiness;
 import entities.Location;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 
 public class FoocleBusinessDTO {
@@ -12,12 +12,12 @@ public class FoocleBusinessDTO {
     private String name;
     private String email;
     private String description;
-    private Instant createdAt;
-    private Instant updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private Location location;
     private LinkedHashSet<BusinessAccountDTO> businessAccounts;
 
-    public FoocleBusinessDTO(String cvr, String name, String email, String description, Instant createdAt, Instant updatedAt, Location location, LinkedHashSet<BusinessAccountDTO> businessAccounts) {
+    public FoocleBusinessDTO(String cvr, String name, String email, String description, LocalDateTime createdAt, LocalDateTime updatedAt, Location location, LinkedHashSet<BusinessAccountDTO> businessAccounts) {
         this.cvr = cvr;
         this.name = name;
         this.email = email;
@@ -32,8 +32,6 @@ public class FoocleBusinessDTO {
         this.name = name;
         this.email = email;
         this.description = description;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
         this.location = location;
     }
     public FoocleBusinessDTO(FoocleBusiness business) {
@@ -58,10 +56,10 @@ public class FoocleBusinessDTO {
     public String getDescription() {
         return description;
     }
-    public Instant getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-    public Instant getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
     public Location getLocation() {
@@ -80,10 +78,10 @@ public class FoocleBusinessDTO {
     public void setDescription(String description) {
         this.description = description;
     }
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
     public void setLocation(Location location) {

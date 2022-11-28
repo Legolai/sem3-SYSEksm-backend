@@ -144,10 +144,10 @@ public class FoocleScoutDTO {
     public void setPassword(String password) {
         this.password = password;
     }
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
     public void setPhoneNumber(String phoneNumber) {

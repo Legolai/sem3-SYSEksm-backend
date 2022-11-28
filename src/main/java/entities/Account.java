@@ -59,7 +59,7 @@ public class Account {
         LocalDateTime currentTime = LocalDateTime.now();
         int nano = currentTime.getNano();
         this.createdAt = currentTime.minusNanos(nano);
-        this.updatedAt = currentTime.minusNanos(nano);
+        this.updatedAt = createdAt;
     }
 
     @PreUpdate

@@ -3,6 +3,7 @@ package dtos;
 import entities.*;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 public class BusinessAccountDTO {
 
@@ -16,8 +17,8 @@ public class BusinessAccountDTO {
     private String lastname;
     private String description;
     private String password;
-    private Instant createdAt;
-    private Instant updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     private String phoneNumber;
     private String areaCode;
@@ -28,7 +29,7 @@ public class BusinessAccountDTO {
     private String zipCode;
     private String country;
 
-    public BusinessAccountDTO(Long businessAccountId, boolean isAdmin, String cvr, Long accountId, String email, String firstname, String lastname, String description, String password, Instant createdAt, Instant updatedAt, String phoneNumber, String areaCode, Long locationId, String address, String city, String zipCode, String country) {
+    public BusinessAccountDTO(Long businessAccountId, boolean isAdmin, String cvr, Long accountId, String email, String firstname, String lastname, String description, String password, LocalDateTime createdAt, LocalDateTime updatedAt, String phoneNumber, String areaCode, Long locationId, String address, String city, String zipCode, String country) {
         this.businessAccountId = businessAccountId;
         this.isAdmin = isAdmin;
         this.cvr = cvr;
@@ -112,10 +113,10 @@ public class BusinessAccountDTO {
     public String getPassword() {
         return password;
     }
-    public Instant getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-    public Instant getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
     public String getPhoneNumber() {
@@ -161,10 +162,10 @@ public class BusinessAccountDTO {
     public void setPassword(String password) {
         this.password = password;
     }
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
     public void setPhoneNumber(String phoneNumber) {

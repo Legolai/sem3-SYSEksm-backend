@@ -54,7 +54,7 @@ public class FoocleScoutResource {
         }
 
         try {
-            FoocleScoutDTO scout = SCOUT_FACADE.createScout(firstname, lastname, email, password, phoneNumber, areaCode);
+            FoocleScoutDTO scout = SCOUT_FACADE.createScout(email, firstname, lastname, password, phoneNumber, areaCode);
             return Response.ok(GSON.toJson(scout)).build();
 
         } catch (Exception ex) {

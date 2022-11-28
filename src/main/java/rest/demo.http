@@ -46,3 +46,16 @@ Content-Type: application/json
   "areaCode": "+45"
 }
 
+###
+POST http://localhost:8080/api/scout/
+Content-Type: application/json
+
+{
+  "firstname": "Michael",
+  "lastname": "Xu",
+  "email": "mic@business.com",
+  "password": "123",
+
+  "phoneNumber": "60875888",
+  "areaCode": "+45"
+}

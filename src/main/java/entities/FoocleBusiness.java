@@ -2,6 +2,7 @@ package entities;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 public class FoocleBusiness {
@@ -20,10 +21,10 @@ public class FoocleBusiness {
     private String description;
 
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "location_ID", nullable = false)
@@ -36,9 +37,22 @@ public class FoocleBusiness {
         this.name = name;
         this.email = email;
         this.description = description;
-        createdAt = Instant.now();
-        updatedAt = createdAt;
         this.location = location;
+    }
+
+    @PrePersist
+    public void onCreate() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        int nano = currentTime.getNano();
+        this.createdAt = currentTime.minusNanos(nano);
+        this.updatedAt = currentTime.minusNanos(nano);
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        int nano = currentTime.getNano();
+        this.updatedAt = currentTime.minusNanos(nano);
     }
 
     public String getId() {
@@ -65,16 +79,16 @@ public class FoocleBusiness {
     public void setDescription(String description) {
         this.description = description;
     }
-    public Instant getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-    public Instant getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
     public Location getLocation() {
@@ -84,4 +98,8 @@ public class FoocleBusiness {
         this.location = location;
     }
 
+    @Override
+    public String toString() {
+        return "FoocleBusiness{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", email='" + email + '\'' + ", description='" + description + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", location=" + location + '}';
+    }
 }
