@@ -11,12 +11,16 @@ import facades.FoocleScoutFacade;
 import facades.UserFacade;
 import security.errorhandling.AuthenticationException;
 import utils.EMF_Creator;
+import utils.GsonLocalDateTime;
 
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -27,7 +31,7 @@ public class FoocleScoutResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     public static final FoocleScoutFacade SCOUT_FACADE = FoocleScoutFacade.getFoocleScoutFacade(EMF);
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTime()).setPrettyPrinting().create();
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

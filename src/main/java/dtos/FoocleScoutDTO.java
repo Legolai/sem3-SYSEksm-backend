@@ -3,6 +3,7 @@ package dtos;
 import entities.*;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -17,8 +18,8 @@ public class FoocleScoutDTO {
     private String lastname;
     private String description;
     private String password;
-    private Instant createdAt;
-    private Instant updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     private String phoneNumber;
     private String areaCode;
@@ -29,7 +30,7 @@ public class FoocleScoutDTO {
     private String zipCode;
     private String country;
 
-    public FoocleScoutDTO(Long scoutId, Long accountId, String email, String firstname, String lastname, String description, String password, Instant createdAt, Instant updatedAt, String phoneNumber, String areaCode, Long locationId, String address, String city, String zipCode, String country) {
+    public FoocleScoutDTO(Long scoutId, Long accountId, String email, String firstname, String lastname, String description, String password, LocalDateTime createdAt, LocalDateTime updatedAt, String phoneNumber, String areaCode, Long locationId, String address, String city, String zipCode, String country) {
         this.scoutId = scoutId;
         this.accountId = accountId;
         this.email = email;
@@ -100,10 +101,10 @@ public class FoocleScoutDTO {
     public String getPassword() {
         return password;
     }
-    public Instant getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-    public Instant getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
     public String getPhoneNumber() {

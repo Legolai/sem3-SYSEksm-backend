@@ -1,7 +1,10 @@
 package entities;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Accounts")
@@ -24,21 +27,21 @@ public class Account {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "password", nullable = false, length = 45)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "number", nullable = false)
     private Phone number;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "location_ID", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_ID")
     private Location location;
 
     public Account() {
@@ -47,10 +50,24 @@ public class Account {
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
-        this.password = password;
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt());
         this.number = number;
     }
 
+    @PrePersist
+    public void onCreate() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        int nano = currentTime.getNano();
+        this.createdAt = currentTime.minusNanos(nano);
+        this.updatedAt = currentTime.minusNanos(nano);
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        int nano = currentTime.getNano();
+        this.updatedAt = currentTime.minusNanos(nano);
+    }
 
     public Long getId() {
         return id;
@@ -94,17 +111,21 @@ public class Account {
         this.password = password;
     }
 
-    public Instant getCreatedAt() {
+    public boolean verifyPassword(String checkPassword) {
+        return BCrypt.checkpw(checkPassword, this.password);
+    }
+
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Instant getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
