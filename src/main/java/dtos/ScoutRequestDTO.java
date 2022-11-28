@@ -1,9 +1,5 @@
 package dtos;
 
-import entities.FoocleScout;
-import entities.SpotMenu;
-
-import javax.persistence.*;
 import java.time.Instant;
 
 public class ScoutRequestDTO {

@@ -41,10 +41,20 @@ public class Account {
     @JoinColumn(name = "location_ID", nullable = false)
     private Location location;
 
+    public Account() {
+    }
+    public Account(String email, String firstname, String lastname, String password, Phone number) {
+        this.email = email;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.password = password;
+        this.number = number;
+    }
+
+
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -52,7 +62,6 @@ public class Account {
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -60,7 +69,6 @@ public class Account {
     public String getFirstname() {
         return firstname;
     }
-
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
@@ -68,7 +76,6 @@ public class Account {
     public String getLastname() {
         return lastname;
     }
-
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
@@ -76,7 +83,6 @@ public class Account {
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -84,7 +90,6 @@ public class Account {
     public String getPassword() {
         return password;
     }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -92,7 +97,6 @@ public class Account {
     public Instant getCreatedAt() {
         return createdAt;
     }
-
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
@@ -100,7 +104,6 @@ public class Account {
     public Instant getUpdatedAt() {
         return updatedAt;
     }
-
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
@@ -108,7 +111,6 @@ public class Account {
     public Phone getNumber() {
         return number;
     }
-
     public void setNumber(Phone number) {
         this.number = number;
     }
@@ -116,7 +118,6 @@ public class Account {
     public Location getLocation() {
         return location;
     }
-
     public void setLocation(Location location) {
         this.location = location;
     }
