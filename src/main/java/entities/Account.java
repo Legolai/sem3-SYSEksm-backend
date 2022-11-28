@@ -69,6 +69,10 @@ public class Account {
         this.updatedAt = currentTime.minusNanos(nano);
     }
 
+    public boolean verifyPassword(String checkPassword) {
+        return BCrypt.checkpw(checkPassword, this.password);
+    }
+
     public Long getId() {
         return id;
     }
@@ -109,10 +113,6 @@ public class Account {
     }
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public boolean verifyPassword(String checkPassword) {
-        return BCrypt.checkpw(checkPassword, this.password);
     }
 
     public LocalDateTime getCreatedAt() {

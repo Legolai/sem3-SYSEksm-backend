@@ -38,18 +38,22 @@ public class FoocleScoutFacade {
         return instance;
     }
 
-    public User getVeryfiedUser(String username, String password) throws AuthenticationException {
+    public FoocleScoutDTO getVeryfiedScout(String email, String password) throws AuthenticationException {
         EntityManager em = emf.createEntityManager();
-        User user;
+        FoocleScoutDTO res;
         try {
-            user = em.find(User.class, username);
-            if (user == null || !user.verifyPassword(password)) {
-                throw new AuthenticationException("Invalid user name or password");
+            Account account = em.find(Account.class, email);
+            if (account == null || !account.verifyPassword(password)) {
+                throw new AuthenticationException("Invalid email or password");
             }
+            Phone phone = em.find(Phone.class, account.getNumber());
+            FoocleScout scout = em.find(FoocleScout.class, account.getId());
+            res = new FoocleScoutDTO(scout, account, phone);
+            res.setPassword("");
         } finally {
             em.close();
         }
-        return user;
+        return res;
     }
 
     public FoocleScoutDTO createScout(String firstname, String lastname, String email, String password, String phoneNumber, String areaCode) {

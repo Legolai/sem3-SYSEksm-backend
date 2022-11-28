@@ -10,6 +10,8 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import dtos.FoocleScoutDTO;
+import facades.FoocleScoutFacade;
 import facades.UserFacade;
 import java.util.Date;
 import java.util.List;
@@ -36,7 +38,7 @@ public class LoginEndpoint {
 
     public static final int TOKEN_EXPIRE_TIME = 1000 * 60 * 30; //30 min
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
-    public static final UserFacade USER_FACADE = UserFacade.getUserFacade(EMF);
+    public static final FoocleScoutFacade SCOUT_FACADE = FoocleScoutFacade.getFoocleScoutFacade(EMF);
 
     @Context
     SecurityContext securityContext;
@@ -44,22 +46,23 @@ public class LoginEndpoint {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response login(String jsonString) throws AuthenticationException, API_Exception {
-        String username;
+    @Path("/scout")
+    public Response scoutLogin(String jsonString) throws AuthenticationException, API_Exception {
+        String email;
         String password;
         try {
             JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
-            username = json.get("username").getAsString();
+            email = json.get("email").getAsString();
             password = json.get("password").getAsString();
         } catch (Exception e) {
            throw new API_Exception("Malformed JSON Suplied",400,e);
         }
 
         try {
-            User user = USER_FACADE.getVeryfiedUser(username, password);
-            String token = createToken(username, user.getRolesAsStrings());
+            FoocleScoutDTO scout = SCOUT_FACADE.getVeryfiedScout(email, password);
+            String token = createScoutToken(email);
             JsonObject responseJson = new JsonObject();
-            responseJson.addProperty("username", username);
+            responseJson.addProperty("email", email);
             responseJson.addProperty("token", token);
             return Response.ok(new Gson().toJson(responseJson)).build();
 
@@ -71,23 +74,14 @@ public class LoginEndpoint {
         }
         throw new AuthenticationException("Invalid username or password! Please try again");
     }
-
-    private String createToken(String userName, List<String> roles) throws JOSEException {
-
-        StringBuilder res = new StringBuilder();
-        for (String string : roles) {
-            res.append(string);
-            res.append(",");
-        }
-        String rolesAsString = res.length() > 0 ? res.substring(0, res.length() - 1) : "";
+    private String createScoutToken(String email) throws JOSEException {
         String issuer = "semesterstartcode-dat3";
 
         JWSSigner signer = new MACSigner(SharedSecret.getSharedKey());
         Date date = new Date();
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .subject(userName)
-                .claim("username", userName)
-                .claim("roles", rolesAsString)
+                .subject(email)
+                .claim("email", email)
                 .claim("issuer", issuer)
                 .issueTime(date)
                 .expirationTime(new Date(date.getTime() + TOKEN_EXPIRE_TIME))
@@ -95,7 +89,6 @@ public class LoginEndpoint {
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
         signedJWT.sign(signer);
         return signedJWT.serialize();
-
     }
 
     @HEAD

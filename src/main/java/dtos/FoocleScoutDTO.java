@@ -129,5 +129,46 @@ public class FoocleScoutDTO {
         return country;
     }
 
-
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
+    }
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
+    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    public void setCity(String city) {
+        this.city = city;
+    }
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+    public void setCountry(String country) {
+        this.country = country;
+    }
 }
