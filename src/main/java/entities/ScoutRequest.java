@@ -2,8 +2,6 @@ package entities;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "ScoutRequests")
@@ -34,9 +32,6 @@ public class ScoutRequest {
 
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
-
-    @OneToMany(mappedBy = "scoutrequests")
-    private Set<Notification> notifications = new LinkedHashSet<>();
 
     public Long getId() {
         return id;
@@ -92,14 +87,6 @@ public class ScoutRequest {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public Set<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(Set<Notification> notifications) {
-        this.notifications = notifications;
     }
 
 }

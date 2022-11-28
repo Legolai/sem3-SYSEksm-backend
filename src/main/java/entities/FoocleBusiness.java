@@ -2,8 +2,6 @@ package entities;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 public class FoocleBusiness {
@@ -31,15 +29,6 @@ public class FoocleBusiness {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "location_ID", nullable = false)
     private Location location;
-
-    @OneToMany(mappedBy = "cvr")
-    private Set<Review> reviews = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "cvr")
-    private Set<BusinessAccount> businessAccounts = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "cvr")
-    private Set<FoocleSpot> foocleSpots = new LinkedHashSet<>();
 
     public String getId() {
         return id;
@@ -95,30 +84,6 @@ public class FoocleBusiness {
 
     public void setLocation(Location location) {
         this.location = location;
-    }
-
-    public Set<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(Set<Review> reviews) {
-        this.reviews = reviews;
-    }
-
-    public Set<BusinessAccount> getBusinessAccounts() {
-        return businessAccounts;
-    }
-
-    public void setBusinessAccounts(Set<BusinessAccount> businessAccounts) {
-        this.businessAccounts = businessAccounts;
-    }
-
-    public Set<FoocleSpot> getFoocleSpots() {
-        return foocleSpots;
-    }
-
-    public void setFoocleSpots(Set<FoocleSpot> foocleSpots) {
-        this.foocleSpots = foocleSpots;
     }
 
 }

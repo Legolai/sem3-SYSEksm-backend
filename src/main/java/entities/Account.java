@@ -2,8 +2,6 @@ package entities;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "Accounts")
@@ -43,19 +41,20 @@ public class Account {
     @JoinColumn(name = "location_ID", nullable = false)
     private Location location;
 
-    @OneToMany(mappedBy = "account")
-    private Set<FoocleScout> foocleScouts = new LinkedHashSet<>();
+    public Account() {
+    }
+    public Account(String email, String firstname, String lastname, String password, Phone number) {
+        this.email = email;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.password = password;
+        this.number = number;
+    }
 
-    @OneToMany(mappedBy = "account")
-    private Set<BusinessAccount> businessAccounts = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "account")
-    private Set<Notification> notifications = new LinkedHashSet<>();
 
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -63,7 +62,6 @@ public class Account {
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -71,7 +69,6 @@ public class Account {
     public String getFirstname() {
         return firstname;
     }
-
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
@@ -79,7 +76,6 @@ public class Account {
     public String getLastname() {
         return lastname;
     }
-
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
@@ -87,7 +83,6 @@ public class Account {
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -95,7 +90,6 @@ public class Account {
     public String getPassword() {
         return password;
     }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -103,7 +97,6 @@ public class Account {
     public Instant getCreatedAt() {
         return createdAt;
     }
-
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
@@ -111,7 +104,6 @@ public class Account {
     public Instant getUpdatedAt() {
         return updatedAt;
     }
-
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
@@ -119,7 +111,6 @@ public class Account {
     public Phone getNumber() {
         return number;
     }
-
     public void setNumber(Phone number) {
         this.number = number;
     }
@@ -127,33 +118,8 @@ public class Account {
     public Location getLocation() {
         return location;
     }
-
     public void setLocation(Location location) {
         this.location = location;
-    }
-
-    public Set<FoocleScout> getFoocleScouts() {
-        return foocleScouts;
-    }
-
-    public void setFoocleScouts(Set<FoocleScout> foocleScouts) {
-        this.foocleScouts = foocleScouts;
-    }
-
-    public Set<BusinessAccount> getBusinessAccounts() {
-        return businessAccounts;
-    }
-
-    public void setBusinessAccounts(Set<BusinessAccount> businessAccounts) {
-        this.businessAccounts = businessAccounts;
-    }
-
-    public Set<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(Set<Notification> notifications) {
-        this.notifications = notifications;
     }
 
 }

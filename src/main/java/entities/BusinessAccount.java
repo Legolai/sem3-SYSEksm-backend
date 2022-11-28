@@ -1,8 +1,6 @@
 package entities;
 
 import javax.persistence.*;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "BusinessAccounts")
@@ -22,9 +20,6 @@ public class BusinessAccount {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "CVR", nullable = false)
     private FoocleBusiness cvr;
-
-    @OneToMany(mappedBy = "businessaccounts")
-    private Set<FoocleSpot> foocleSpots = new LinkedHashSet<>();
 
     public Long getId() {
         return id;
@@ -56,14 +51,6 @@ public class BusinessAccount {
 
     public void setCvr(FoocleBusiness cvr) {
         this.cvr = cvr;
-    }
-
-    public Set<FoocleSpot> getFoocleSpots() {
-        return foocleSpots;
-    }
-
-    public void setFoocleSpots(Set<FoocleSpot> foocleSpots) {
-        this.foocleSpots = foocleSpots;
     }
 
 }

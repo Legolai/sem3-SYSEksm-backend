@@ -1,14 +1,14 @@
 package entities;
 
-import javax.persistence.*;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "Locations")
 public class Location {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "location_ID", nullable = false)
     private Long id;
 
@@ -23,18 +23,6 @@ public class Location {
 
     @Column(name = "country", nullable = false, length = 45)
     private String country;
-
-    @OneToMany(mappedBy = "location")
-    private Set<Review> reviews = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "location")
-    private Set<FoocleSpot> foocleSpots = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "location")
-    private Set<Account> accounts = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "location")
-    private Set<FoocleBusiness> foocleBusinesses = new LinkedHashSet<>();
 
     public Long getId() {
         return id;
@@ -74,38 +62,6 @@ public class Location {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public Set<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(Set<Review> reviews) {
-        this.reviews = reviews;
-    }
-
-    public Set<FoocleSpot> getFoocleSpots() {
-        return foocleSpots;
-    }
-
-    public void setFoocleSpots(Set<FoocleSpot> foocleSpots) {
-        this.foocleSpots = foocleSpots;
-    }
-
-    public Set<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(Set<Account> accounts) {
-        this.accounts = accounts;
-    }
-
-    public Set<FoocleBusiness> getFoocleBusinesses() {
-        return foocleBusinesses;
-    }
-
-    public void setFoocleBusinesses(Set<FoocleBusiness> foocleBusinesses) {
-        this.foocleBusinesses = foocleBusinesses;
     }
 
 }
