@@ -1,8 +1,6 @@
 package entities;
 
 import javax.persistence.*;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 public class Phone {
@@ -13,9 +11,6 @@ public class Phone {
 
     @Column(name = "areaCode", nullable = false, length = 45)
     private String areaCode;
-
-    @OneToMany(mappedBy = "number")
-    private Set<Account> accounts = new LinkedHashSet<>();
 
     public String getId() {
         return id;
@@ -31,14 +26,6 @@ public class Phone {
 
     public void setAreaCode(String areaCode) {
         this.areaCode = areaCode;
-    }
-
-    public Set<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(Set<Account> accounts) {
-        this.accounts = accounts;
     }
 
 }

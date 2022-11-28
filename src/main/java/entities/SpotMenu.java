@@ -2,8 +2,6 @@ package entities;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 public class SpotMenu {
@@ -39,9 +37,6 @@ public class SpotMenu {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "fooclespots_ID", nullable = false)
     private FoocleSpot fooclespots;
-
-    @OneToMany(mappedBy = "spotmenu")
-    private Set<ScoutRequest> scoutRequests = new LinkedHashSet<>();
 
     public Long getId() {
         return id;
@@ -113,14 +108,6 @@ public class SpotMenu {
 
     public void setFooclespots(FoocleSpot fooclespots) {
         this.fooclespots = fooclespots;
-    }
-
-    public Set<ScoutRequest> getScoutRequests() {
-        return scoutRequests;
-    }
-
-    public void setScoutRequests(Set<ScoutRequest> scoutRequests) {
-        this.scoutRequests = scoutRequests;
     }
 
 }
