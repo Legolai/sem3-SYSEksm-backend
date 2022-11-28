@@ -10,8 +10,8 @@ public class BusinessAccount {
     @Column(name = "businessaccount_ID", nullable = false)
     private Long id;
 
-    @Column(name = "isAdmin", nullable = false)
-    private Byte isAdmin;
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    private boolean isAdmin;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_ID", nullable = false)
@@ -21,34 +21,36 @@ public class BusinessAccount {
     @JoinColumn(name = "CVR", nullable = false)
     private FoocleBusiness cvr;
 
+    public BusinessAccount() {
+
+    }
+    public BusinessAccount(boolean isAdmin, Account account, FoocleBusiness cvr) {
+        this.isAdmin = isAdmin;
+        this.account = account;
+        this.cvr = cvr;
+    }
+
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
-
-    public Byte getIsAdmin() {
+    public boolean getIsAdmin() {
         return isAdmin;
     }
-
-    public void setIsAdmin(Byte isAdmin) {
+    public void setIsAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
     }
-
     public Account getAccount() {
         return account;
     }
-
     public void setAccount(Account account) {
         this.account = account;
     }
-
     public FoocleBusiness getCvr() {
         return cvr;
     }
-
     public void setCvr(FoocleBusiness cvr) {
         this.cvr = cvr;
     }

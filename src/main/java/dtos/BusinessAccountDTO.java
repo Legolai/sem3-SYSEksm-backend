@@ -3,13 +3,12 @@ package dtos;
 import entities.*;
 
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
-public class FoocleScoutDTO {
+public class BusinessAccountDTO {
 
-    private Long scoutId;
-//    private Set<ScoutRequestDTO> scoutRequests = new LinkedHashSet<>();
+    private Long businessAccountId;
+    private boolean isAdmin;
+    private String cvr;
 
     private Long accountId;
     private String email;
@@ -29,8 +28,10 @@ public class FoocleScoutDTO {
     private String zipCode;
     private String country;
 
-    public FoocleScoutDTO(Long scoutId, Long accountId, String email, String firstname, String lastname, String description, String password, Instant createdAt, Instant updatedAt, String phoneNumber, String areaCode, Long locationId, String address, String city, String zipCode, String country) {
-        this.scoutId = scoutId;
+    public BusinessAccountDTO(Long businessAccountId, boolean isAdmin, String cvr, Long accountId, String email, String firstname, String lastname, String description, String password, Instant createdAt, Instant updatedAt, String phoneNumber, String areaCode, Long locationId, String address, String city, String zipCode, String country) {
+        this.businessAccountId = businessAccountId;
+        this.isAdmin = isAdmin;
+        this.cvr = cvr;
         this.accountId = accountId;
         this.email = email;
         this.firstname = firstname;
@@ -47,8 +48,10 @@ public class FoocleScoutDTO {
         this.zipCode = zipCode;
         this.country = country;
     }
-    public FoocleScoutDTO(FoocleScout foocleScout, Account account, Phone phone, Location location) {
-        this.scoutId = foocleScout.getId();
+    public BusinessAccountDTO(BusinessAccount businessAccount, Account account, Phone phone, Location location) {
+        this.businessAccountId = businessAccount.getId();
+        this.isAdmin = businessAccount.getIsAdmin();
+        this.cvr = businessAccount.getCvr().getId();
         this.accountId = account.getId();
         this.email = account.getEmail();
         this.firstname = account.getFirstname();
@@ -65,8 +68,10 @@ public class FoocleScoutDTO {
         this.zipCode = location.getZipCode();
         this.country = location.getCountry();
     }
-    public FoocleScoutDTO(FoocleScout foocleScout, Account account, Phone phone) {
-        this.scoutId = foocleScout.getId();
+    public BusinessAccountDTO(BusinessAccount businessAccount, Account account, Phone phone) {
+        this.businessAccountId = businessAccount.getId();
+        this.isAdmin = businessAccount.getIsAdmin();
+        this.cvr = businessAccount.getCvr().getId();
         this.accountId = account.getId();
         this.email = account.getEmail();
         this.firstname = account.getFirstname();
@@ -79,8 +84,15 @@ public class FoocleScoutDTO {
         this.areaCode = phone.getAreaCode();
     }
 
-    public Long getScoutId() {
-        return scoutId;
+
+    public Long getBusinessAccountId() {
+        return businessAccountId;
+    }
+    public boolean getIsAdmin() {
+        return isAdmin;
+    }
+    public String getCvr() {
+        return cvr;
     }
     public Long getAccountId() {
         return accountId;
@@ -128,6 +140,12 @@ public class FoocleScoutDTO {
         return country;
     }
 
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+    public void setCvr(String cvr) {
+        this.cvr = cvr;
+    }
     public void setEmail(String email) {
         this.email = email;
     }
@@ -173,6 +191,6 @@ public class FoocleScoutDTO {
 
     @Override
     public String toString() {
-        return "FoocleScoutDTO{" + "scoutId=" + scoutId + ", accountId=" + accountId + ", email='" + email + '\'' + ", firstname='" + firstname + '\'' + ", lastname='" + lastname + '\'' + ", description='" + description + '\'' + ", password='" + password + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", phoneNumber='" + phoneNumber + '\'' + ", areaCode='" + areaCode + '\'' + ", locationId=" + locationId + ", address='" + address + '\'' + ", city='" + city + '\'' + ", zipCode='" + zipCode + '\'' + ", country='" + country + '\'' + '}';
+        return "FoocleBusinessAccountDTO{" + "businessAccountId=" + businessAccountId + ", isAdmin=" + isAdmin + ", cvr='" + cvr + '\'' + ", accountId=" + accountId + ", email='" + email + '\'' + ", firstname='" + firstname + '\'' + ", lastname='" + lastname + '\'' + ", description='" + description + '\'' + ", password='" + password + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", phoneNumber='" + phoneNumber + '\'' + ", areaCode='" + areaCode + '\'' + ", locationId=" + locationId + ", address='" + address + '\'' + ", city='" + city + '\'' + ", zipCode='" + zipCode + '\'' + ", country='" + country + '\'' + '}';
     }
 }

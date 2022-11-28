@@ -20,3 +20,29 @@ Content-Type: application/json
 {
   "City": "Beijing"
 }
+
+
+###
+POST http://localhost:8080/api/business/
+Content-Type: application/json
+
+{
+  "cvr": "testcvr",
+  "name": "micfirma",
+  "businessEmail": "mfirma@mf.com",
+  "description": "test firma",
+
+  "address": "Lyngbyvej 1",
+  "city": "Lyngby",
+  "zipCode": "2800",
+  "country": "Danmark",
+
+  "firstname": "Michael",
+  "lastname": "Xu",
+  "businessAccountEmail": "mic@business.com",
+  "password": "123",
+
+  "phoneNumber": "60875888",
+  "areaCode": "+45"
+}
+
