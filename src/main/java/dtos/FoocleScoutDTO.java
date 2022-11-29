@@ -14,6 +14,7 @@ public class FoocleScoutDTO {
 
     private Long accountId;
     private String email;
+    private String phoneNumber;
     private String firstname;
     private String lastname;
     private String description;
@@ -21,16 +22,13 @@ public class FoocleScoutDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private String phoneNumber;
-    private String areaCode;
-
     private Long locationId;
     private String address;
     private String city;
     private String zipCode;
     private String country;
 
-    public FoocleScoutDTO(Long scoutId, Long accountId, String email, String firstname, String lastname, String description, String password, LocalDateTime createdAt, LocalDateTime updatedAt, String phoneNumber, String areaCode, Long locationId, String address, String city, String zipCode, String country) {
+    public FoocleScoutDTO(Long scoutId, Long accountId, String email, String firstname, String lastname, String description, String password, LocalDateTime createdAt, LocalDateTime updatedAt, String phoneNumber, Long locationId, String address, String city, String zipCode, String country) {
         this.scoutId = scoutId;
         this.accountId = accountId;
         this.email = email;
@@ -41,44 +39,44 @@ public class FoocleScoutDTO {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.phoneNumber = phoneNumber;
-        this.areaCode = areaCode;
         this.locationId = locationId;
         this.address = address;
         this.city = city;
         this.zipCode = zipCode;
         this.country = country;
     }
-    public FoocleScoutDTO(FoocleScout foocleScout, Account account, Phone phone, Location location) {
+    public FoocleScoutDTO(FoocleScout foocleScout, Account account, Location location) {
         this.scoutId = foocleScout.getId();
+
         this.accountId = account.getId();
         this.email = account.getEmail();
+        this.phoneNumber = account.getPhoneNumber();
         this.firstname = account.getFirstname();
         this.lastname = account.getLastname();
         this.description = account.getDescription();
         this.password = account.getPassword();
         this.createdAt = account.getCreatedAt();
         this.updatedAt = account.getUpdatedAt();
-        this.phoneNumber = phone.getId();
-        this.areaCode = phone.getAreaCode();
+
         this.locationId = location.getId();
         this.address = location.getAddress();
         this.city = location.getCity();
         this.zipCode = location.getZipCode();
         this.country = location.getCountry();
     }
-    public FoocleScoutDTO(FoocleScout foocleScout, Account account, Phone phone) {
+    public FoocleScoutDTO(FoocleScout foocleScout, Account account) {
         this.scoutId = foocleScout.getId();
         this.accountId = account.getId();
         this.email = account.getEmail();
+        this.phoneNumber = account.getPhoneNumber();
         this.firstname = account.getFirstname();
         this.lastname = account.getLastname();
         this.description = account.getDescription();
         this.password = account.getPassword();
         this.createdAt = account.getCreatedAt();
         this.updatedAt = account.getUpdatedAt();
-        this.phoneNumber = phone.getId();
-        this.areaCode = phone.getAreaCode();
     }
+
 
     public Long getScoutId() {
         return scoutId;
@@ -88,6 +86,9 @@ public class FoocleScoutDTO {
     }
     public String getEmail() {
         return email;
+    }
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
     public String getFirstname() {
         return firstname;
@@ -106,12 +107,6 @@ public class FoocleScoutDTO {
     }
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
-    }
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-    public String getAreaCode() {
-        return areaCode;
     }
     public Long getLocationId() {
         return locationId;
@@ -132,6 +127,9 @@ public class FoocleScoutDTO {
     public void setEmail(String email) {
         this.email = email;
     }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
@@ -149,12 +147,6 @@ public class FoocleScoutDTO {
     }
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-    public void setAreaCode(String areaCode) {
-        this.areaCode = areaCode;
     }
     public void setLocationId(Long locationId) {
         this.locationId = locationId;
@@ -174,6 +166,6 @@ public class FoocleScoutDTO {
 
     @Override
     public String toString() {
-        return "FoocleScoutDTO{" + "scoutId=" + scoutId + ", accountId=" + accountId + ", email='" + email + '\'' + ", firstname='" + firstname + '\'' + ", lastname='" + lastname + '\'' + ", description='" + description + '\'' + ", password='" + password + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", phoneNumber='" + phoneNumber + '\'' + ", areaCode='" + areaCode + '\'' + ", locationId=" + locationId + ", address='" + address + '\'' + ", city='" + city + '\'' + ", zipCode='" + zipCode + '\'' + ", country='" + country + '\'' + '}';
+        return "FoocleScoutDTO{" + "scoutId=" + scoutId + ", accountId=" + accountId + ", email='" + email + '\'' + ", phoneNumber='" + phoneNumber + '\'' + ", firstname='" + firstname + '\'' + ", lastname='" + lastname + '\'' + ", description='" + description + '\'' + ", password='" + password + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", locationId=" + locationId + ", address='" + address + '\'' + ", city='" + city + '\'' + ", zipCode='" + zipCode + '\'' + ", country='" + country + '\'' + '}';
     }
 }

@@ -3,7 +3,6 @@ package facades;
 import dtos.FoocleScoutDTO;
 import entities.Account;
 import entities.FoocleScout;
-import entities.Phone;
 import entities.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -52,22 +51,20 @@ public class FoocleScoutFacade {
         return user;
     }
 
-    public FoocleScoutDTO createScout(String email, String firstname, String lastname, String password, String phoneNumber, String areaCode) {
-        Phone phone = new Phone(phoneNumber, areaCode);
-        Account account = new Account(email, firstname, lastname, password, phone);
+    public FoocleScoutDTO createScout(String email, String phoneNumber, String firstname, String lastname, String password) {
+        Account account = new Account(email, phoneNumber, firstname, lastname, password);
         FoocleScout scout = new FoocleScout(account);
 
-//        executeInsideTransaction(em -> {
-//            em.persist(phone);
-//            em.persist(account);
-//            em.persist(scout);
-//        });
-            //TODO: Handle duplicate error
-        executeInsideTransaction(em -> em.persist(phone));
-        executeInsideTransaction(em -> em.persist(account));
-        executeInsideTransaction(em -> em.persist(scout));
+        executeInsideTransaction(em -> {
+            em.persist(account);
+            em.persist(scout);
+        });
 
-        return new FoocleScoutDTO(scout, account, phone);
+//        executeInsideTransaction(em -> em.persist(phone));
+//        executeInsideTransaction(em -> em.persist(account));
+//        executeInsideTransaction(em -> em.persist(scout));
+
+        return new FoocleScoutDTO(scout, account);
     }
 
     private <R> R executeWithClose(Function<EntityManager, R> action) {

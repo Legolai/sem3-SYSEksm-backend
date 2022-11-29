@@ -13,6 +13,7 @@ public class BusinessAccountDTO {
 
     private Long accountId;
     private String email;
+    private String phoneNumber;
     private String firstname;
     private String lastname;
     private String description;
@@ -20,69 +21,68 @@ public class BusinessAccountDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private String phoneNumber;
-    private String areaCode;
-
     private Long locationId;
     private String address;
     private String city;
     private String zipCode;
     private String country;
 
-    public BusinessAccountDTO(Long businessAccountId, boolean isAdmin, String cvr, Long accountId, String email, String firstname, String lastname, String description, String password, LocalDateTime createdAt, LocalDateTime updatedAt, String phoneNumber, String areaCode, Long locationId, String address, String city, String zipCode, String country) {
+
+    public BusinessAccountDTO(Long businessAccountId, boolean isAdmin, String cvr, Long accountId, String email, String phoneNumber, String firstname, String lastname, String description, String password, LocalDateTime createdAt, LocalDateTime updatedAt, Long locationId, String address, String city, String zipCode, String country) {
         this.businessAccountId = businessAccountId;
         this.isAdmin = isAdmin;
         this.cvr = cvr;
+
         this.accountId = accountId;
         this.email = email;
+        this.phoneNumber = phoneNumber;
         this.firstname = firstname;
         this.lastname = lastname;
         this.description = description;
         this.password = password;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.phoneNumber = phoneNumber;
-        this.areaCode = areaCode;
+
         this.locationId = locationId;
         this.address = address;
         this.city = city;
         this.zipCode = zipCode;
         this.country = country;
     }
-    public BusinessAccountDTO(BusinessAccount businessAccount, Account account, Phone phone, Location location) {
+    public BusinessAccountDTO(BusinessAccount businessAccount, Account account, Location location) {
         this.businessAccountId = businessAccount.getId();
         this.isAdmin = businessAccount.getIsAdmin();
         this.cvr = businessAccount.getCvr().getId();
+
         this.accountId = account.getId();
         this.email = account.getEmail();
+        this.phoneNumber = account.getPhoneNumber();
         this.firstname = account.getFirstname();
         this.lastname = account.getLastname();
         this.description = account.getDescription();
         this.password = account.getPassword();
         this.createdAt = account.getCreatedAt();
         this.updatedAt = account.getUpdatedAt();
-        this.phoneNumber = phone.getId();
-        this.areaCode = phone.getAreaCode();
+
         this.locationId = location.getId();
         this.address = location.getAddress();
         this.city = location.getCity();
         this.zipCode = location.getZipCode();
         this.country = location.getCountry();
     }
-    public BusinessAccountDTO(BusinessAccount businessAccount, Account account, Phone phone) {
+    public BusinessAccountDTO(BusinessAccount businessAccount, Account account) {
         this.businessAccountId = businessAccount.getId();
         this.isAdmin = businessAccount.getIsAdmin();
         this.cvr = businessAccount.getCvr().getId();
         this.accountId = account.getId();
         this.email = account.getEmail();
+        this.phoneNumber = account.getPhoneNumber();
         this.firstname = account.getFirstname();
         this.lastname = account.getLastname();
         this.description = account.getDescription();
         this.password = account.getPassword();
         this.createdAt = account.getCreatedAt();
         this.updatedAt = account.getUpdatedAt();
-        this.phoneNumber = phone.getId();
-        this.areaCode = phone.getAreaCode();
     }
 
 
@@ -121,9 +121,6 @@ public class BusinessAccountDTO {
     }
     public String getPhoneNumber() {
         return phoneNumber;
-    }
-    public String getAreaCode() {
-        return areaCode;
     }
     public Long getLocationId() {
         return locationId;
@@ -171,9 +168,6 @@ public class BusinessAccountDTO {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-    public void setAreaCode(String areaCode) {
-        this.areaCode = areaCode;
-    }
     public void setLocationId(Long locationId) {
         this.locationId = locationId;
     }
@@ -192,6 +186,6 @@ public class BusinessAccountDTO {
 
     @Override
     public String toString() {
-        return "FoocleBusinessAccountDTO{" + "businessAccountId=" + businessAccountId + ", isAdmin=" + isAdmin + ", cvr='" + cvr + '\'' + ", accountId=" + accountId + ", email='" + email + '\'' + ", firstname='" + firstname + '\'' + ", lastname='" + lastname + '\'' + ", description='" + description + '\'' + ", password='" + password + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", phoneNumber='" + phoneNumber + '\'' + ", areaCode='" + areaCode + '\'' + ", locationId=" + locationId + ", address='" + address + '\'' + ", city='" + city + '\'' + ", zipCode='" + zipCode + '\'' + ", country='" + country + '\'' + '}';
+        return "BusinessAccountDTO{" + "businessAccountId=" + businessAccountId + ", isAdmin=" + isAdmin + ", cvr='" + cvr + '\'' + ", accountId=" + accountId + ", email='" + email + '\'' + ", phoneNumber='" + phoneNumber + '\'' + ", firstname='" + firstname + '\'' + ", lastname='" + lastname + '\'' + ", description='" + description + '\'' + ", password='" + password + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", locationId=" + locationId + ", address='" + address + '\'' + ", city='" + city + '\'' + ", zipCode='" + zipCode + '\'' + ", country='" + country + '\'' + '}';
     }
 }

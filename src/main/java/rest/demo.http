@@ -33,7 +33,6 @@ Content-Type: application/json
   "description": "test firma",
 
   "businessPhoneNumber": "11221122",
-  "businessPhoneAreaCode": "+45",
 
   "address": "Lyngbyvej 1",
   "city": "Lyngby",
@@ -45,20 +44,29 @@ Content-Type: application/json
   "businessAccountEmail": "mic@business.com",
   "password": "123",
 
-  "phoneNumber": "44114411",
-  "areaCode": "+45"
+  "phoneNumber": "44114411"
 }
 
-###
+###2
 POST http://localhost:8080/api/scout/
 Content-Type: application/json
 
 {
+  "email": "mic@scout.com",
+  "phoneNumber": "60875888",
   "firstname": "Michael",
   "lastname": "Xu",
-  "email": "mic@business.com",
-  "password": "123",
+  "password": "123"
+}
 
+###3
+POST http://localhost:8080/api/scout/
+Content-Type: application/json
+
+{
+  "email": "m@m.com",
   "phoneNumber": "60875888",
-  "areaCode": "+45"
+  "password": "aba",
+  "firstname": "Mim",
+  "lastname": "m"
 }

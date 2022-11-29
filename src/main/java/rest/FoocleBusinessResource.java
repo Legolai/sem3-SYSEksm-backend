@@ -35,11 +35,9 @@ public class FoocleBusinessResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createNewBusiness(String content) throws API_Exception {
-        String cvr, name, businessEmail, description;
-        String businessPhoneNumber, businessPhoneAreaCode;
+        String cvr, name, businessEmail, businessPhoneNumber, description;
         String address, city, zipCode, country;
-        String firstname, lastname, businessAccountEmail, password;
-        String phoneNumber, areaCode;
+        String firstname, lastname, businessAccountEmail, phoneNumber, password;
 
         try {
             JsonObject json = JsonParser.parseString(content).getAsJsonObject();
@@ -48,7 +46,6 @@ public class FoocleBusinessResource {
             businessEmail = json.get("businessEmail").getAsString();
             description = json.get("description").getAsString();
             businessPhoneNumber = json.get("businessPhoneNumber").getAsString();
-            businessPhoneAreaCode = json.get("businessPhoneAreaCode").getAsString();
 
             address = json.get("address").getAsString();
             city = json.get("city").getAsString();
@@ -61,13 +58,12 @@ public class FoocleBusinessResource {
             password = json.get("password").getAsString();
 
             phoneNumber = json.get("phoneNumber").getAsString();
-            areaCode = json.get("areaCode").getAsString();
         } catch (Exception e) {
             throw new API_Exception("Malformed JSON Supplied",400,e);
         }
 
         try {
-            FoocleBusinessDTO business = BUSINESS_FACADE.createBusiness(cvr, name, businessEmail, description, businessPhoneNumber, businessPhoneAreaCode, address, city, zipCode, country, firstname, lastname, businessAccountEmail, password, phoneNumber, areaCode);
+            FoocleBusinessDTO business = BUSINESS_FACADE.createBusiness(cvr, name, businessEmail, businessPhoneNumber, description, address, city, zipCode, country, businessAccountEmail, phoneNumber, firstname, lastname, password);
             return Response.ok(GSON.toJson(business)).build();
 
         } catch (Exception ex) {

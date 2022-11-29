@@ -16,9 +16,8 @@ public class FoocleBusiness {
     @Column(name = "businessEmail", nullable = false, length = 45)
     private String businessEmail;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "businessPhone", nullable = false)
-    private Phone businessPhone;
+    @Column(name = "phoneNumber", nullable = false, length = 45)
+    private String phoneNumber;
 
     @Lob
     @Column(name = "description")
@@ -36,12 +35,12 @@ public class FoocleBusiness {
 
     public FoocleBusiness() {
     }
-    public FoocleBusiness(String id, String name, String businessEmail, String description, Phone businessPhone, Location location) {
+    public FoocleBusiness(String id, String name, String businessEmail, String phoneNumber, String description, Location location) {
         this.id = id;
         this.name = name;
         this.businessEmail = businessEmail;
+        this.phoneNumber = phoneNumber;
         this.description = description;
-        this.businessPhone = businessPhone;
         this.location = location;
     }
 
@@ -78,11 +77,11 @@ public class FoocleBusiness {
     public void setBusinessEmail(String businessEmail) {
         this.businessEmail = businessEmail;
     }
-    public Phone getBusinessPhone() {
-        return businessPhone;
+    public String getBusinessPhone() {
+        return phoneNumber;
     }
-    public void setBusinessPhone(Phone businessPhone) {
-        this.businessPhone = businessPhone;
+    public void setBusinessPhone(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
     public String getDescription() {
         return description;
