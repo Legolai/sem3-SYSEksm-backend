@@ -1,7 +1,7 @@
 package rest;
 
-import java.util.Set;
 import javax.ws.rs.core.Application;
+import java.util.Set;
 
 @javax.ws.rs.ApplicationPath("api")
 public class ApplicationConfig extends Application {
@@ -27,10 +27,7 @@ public class ApplicationConfig extends Application {
         resources.add(org.glassfish.jersey.server.wadl.internal.WadlResource.class);
         resources.add(rest.FoocleScoutResource.class);
         resources.add(rest.FoocleBusinessResource.class);
-//        resources.add(rest.DemoResource.class);
-//        resources.add(rest.UserResource.class);
-//        resources.add(weatherNcatResource.class);
-//        resources.add(rest.RenameMeResource.class);
+        resources.add(rest.DemoResource.class);
         resources.add(security.JWTAuthenticationFilter.class);
         resources.add(security.LoginEndpoint.class);
         resources.add(security.RolesAllowedFilter.class);
