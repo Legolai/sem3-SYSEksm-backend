@@ -4,13 +4,15 @@ import dtos.FoocleScoutDTO;
 import entities.Account;
 import entities.FoocleScout;
 import entities.Phone;
-import entities.User;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 
 import security.errorhandling.AuthenticationException;
 
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -38,18 +40,19 @@ public class FoocleScoutFacade {
         return instance;
     }
 
-    public User getVeryfiedUser(String username, String password) throws AuthenticationException {
-        EntityManager em = emf.createEntityManager();
-        User user;
-        try {
-            user = em.find(User.class, username);
-            if (user == null || !user.verifyPassword(password)) {
-                throw new AuthenticationException("Invalid user name or password");
-            }
-        } finally {
-            em.close();
+    public FoocleScoutDTO getVeryfiedScout(String email, String password) throws AuthenticationException {
+        List<FoocleScout> response = executeWithClose(em -> {
+            TypedQuery<FoocleScout> query = em.createQuery("SELECT f FROM FoocleScout f WHERE f.account.email = :email", FoocleScout.class);
+            query.setParameter("email", email);
+            return query.getResultList();
+        });
+        if (response.isEmpty() || !response.get(0).getAccount().verifyPassword(password)) {
+            throw new AuthenticationException("Invalid email or password");
         }
-        return user;
+        FoocleScout scout = response.get(0);
+        FoocleScoutDTO res = new FoocleScoutDTO(scout, scout.getAccount(), scout.getAccount().getNumber());
+        res.setPassword("");
+        return res;
     }
 
     public FoocleScoutDTO createScout(String firstname, String lastname, String email, String password, String phoneNumber, String areaCode) {

@@ -24,6 +24,17 @@ public class Location {
     @Column(name = "country", nullable = false, length = 45)
     private String country;
 
+
+    public Location() {
+    }
+
+    public Location(String address, String city, String zipCode, String country) {
+        this.address = address;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.country = country;
+    }
+
     public Long getId() {
         return id;
     }
