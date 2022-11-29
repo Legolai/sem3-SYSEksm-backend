@@ -57,11 +57,15 @@ public class FoocleScoutFacade {
         Account account = new Account(email, firstname, lastname, password, phone);
         FoocleScout scout = new FoocleScout(account);
 
-        executeInsideTransaction(em -> {
-            em.persist(phone);
-            em.persist(account);
-            em.persist(scout);
-        });
+//        executeInsideTransaction(em -> {
+//            em.persist(phone);
+//            em.persist(account);
+//            em.persist(scout);
+//        });
+            //TODO: Handle duplicate error
+        executeInsideTransaction(em -> em.persist(phone));
+        executeInsideTransaction(em -> em.persist(account));
+        executeInsideTransaction(em -> em.persist(scout));
 
         return new FoocleScoutDTO(scout, account, phone);
     }

@@ -13,11 +13,15 @@ public class FoocleBusiness {
     @Column(name = "name", nullable = false, length = 45)
     private String name;
 
-    @Column(name = "email", nullable = false, length = 45)
-    private String email;
+    @Column(name = "businessEmail", nullable = false, length = 45)
+    private String businessEmail;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "businessPhone", nullable = false)
+    private Phone businessPhone;
 
     @Lob
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     private String description;
 
     @Column(name = "created_at", nullable = false)
@@ -32,11 +36,12 @@ public class FoocleBusiness {
 
     public FoocleBusiness() {
     }
-    public FoocleBusiness(String id, String name, String email, String description, Location location) {
+    public FoocleBusiness(String id, String name, String businessEmail, String description, Phone businessPhone, Location location) {
         this.id = id;
         this.name = name;
-        this.email = email;
+        this.businessEmail = businessEmail;
         this.description = description;
+        this.businessPhone = businessPhone;
         this.location = location;
     }
 
@@ -67,11 +72,17 @@ public class FoocleBusiness {
     public void setName(String name) {
         this.name = name;
     }
-    public String getEmail() {
-        return email;
+    public String getBusinessEmail() {
+        return businessEmail;
     }
-    public void setEmail(String email) {
-        this.email = email;
+    public void setBusinessEmail(String businessEmail) {
+        this.businessEmail = businessEmail;
+    }
+    public Phone getBusinessPhone() {
+        return businessPhone;
+    }
+    public void setBusinessPhone(Phone businessPhone) {
+        this.businessPhone = businessPhone;
     }
     public String getDescription() {
         return description;
@@ -98,8 +109,4 @@ public class FoocleBusiness {
         this.location = location;
     }
 
-    @Override
-    public String toString() {
-        return "FoocleBusiness{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", email='" + email + '\'' + ", description='" + description + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", location=" + location + '}';
-    }
 }

@@ -19,7 +19,6 @@ public class Phone {
     }
 
 
-
     public String getId() {
         return id;
     }
@@ -34,4 +33,8 @@ public class Phone {
         this.areaCode = areaCode;
     }
 
+    @Override
+    public String toString() {
+        return "Phone{" + "id='" + id + '\'' + ", areaCode='" + areaCode + '\'' + '}';
+    }
 }

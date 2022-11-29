@@ -49,10 +49,11 @@ public class FoocleBusinessFacade {
         return user;
     }
 
-    public FoocleBusinessDTO createBusiness(String cvr, String name, String businessEmail, String description, String address, String city, String zipCode, String country, String firstname, String lastname, String businessAccountEmail, String password, String phoneNumber, String areaCode) {
+    public FoocleBusinessDTO createBusiness(String cvr, String name, String businessEmail, String description, String businessPhoneNumber, String businessPhoneAreaCode, String address, String city, String zipCode, String country, String firstname, String lastname, String businessAccountEmail, String password, String phoneNumber, String areaCode) {
 
         Location location = new Location(address, city, zipCode, country);
-        FoocleBusiness foocleBusiness = new FoocleBusiness(cvr, name, businessEmail, description, location);
+        Phone businessPhone = new Phone(businessPhoneNumber, businessPhoneAreaCode);
+        FoocleBusiness foocleBusiness = new FoocleBusiness(cvr, name, businessEmail, description, businessPhone, location);
         Phone phone = new Phone(phoneNumber, areaCode);
         Account account = new Account(firstname, lastname, businessAccountEmail, password, phone);
         BusinessAccount businessAccount = new BusinessAccount(true, account, foocleBusiness);
@@ -65,7 +66,7 @@ public class FoocleBusinessFacade {
 //            em.persist(businessAccount);
 //        });
         executeInsideTransaction(em -> em.persist(location));
-        System.out.println(foocleBusiness.toString());
+        executeInsideTransaction(em -> em.persist(businessPhone));
         executeInsideTransaction(em -> em.persist(foocleBusiness));
         executeInsideTransaction(em -> em.persist(phone));
         executeInsideTransaction(em -> em.persist(account));

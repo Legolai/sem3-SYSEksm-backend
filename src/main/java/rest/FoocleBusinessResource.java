@@ -11,6 +11,7 @@ import errorhandling.GenericExceptionMapper;
 import facades.FoocleBusinessFacade;
 import facades.FoocleScoutFacade;
 import utils.EMF_Creator;
+import utils.GsonLocalDateTime;
 
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.Consumes;
@@ -19,6 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,13 +29,14 @@ public class FoocleBusinessResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     public static final FoocleBusinessFacade BUSINESS_FACADE = FoocleBusinessFacade.getFoocleBusinessFacade(EMF);
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTime()).setPrettyPrinting().create();
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createNewBusiness(String content) throws API_Exception {
         String cvr, name, businessEmail, description;
+        String businessPhoneNumber, businessPhoneAreaCode;
         String address, city, zipCode, country;
         String firstname, lastname, businessAccountEmail, password;
         String phoneNumber, areaCode;
@@ -44,6 +47,8 @@ public class FoocleBusinessResource {
             name = json.get("name").getAsString();
             businessEmail = json.get("businessEmail").getAsString();
             description = json.get("description").getAsString();
+            businessPhoneNumber = json.get("businessPhoneNumber").getAsString();
+            businessPhoneAreaCode = json.get("businessPhoneAreaCode").getAsString();
 
             address = json.get("address").getAsString();
             city = json.get("city").getAsString();
@@ -62,8 +67,8 @@ public class FoocleBusinessResource {
         }
 
         try {
-            FoocleBusinessDTO scout = BUSINESS_FACADE.createBusiness(cvr, name, businessEmail, description, address, city, zipCode, country, firstname, lastname, businessAccountEmail, password, phoneNumber, areaCode);
-            return Response.ok(GSON.toJson(scout)).build();
+            FoocleBusinessDTO business = BUSINESS_FACADE.createBusiness(cvr, name, businessEmail, description, businessPhoneNumber, businessPhoneAreaCode, address, city, zipCode, country, firstname, lastname, businessAccountEmail, password, phoneNumber, areaCode);
+            return Response.ok(GSON.toJson(business)).build();
 
         } catch (Exception ex) {
             Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);

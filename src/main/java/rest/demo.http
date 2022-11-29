@@ -1,25 +1,25 @@
-GET http://localhost:8080/devops_starter_war_exploded/api/info
-
-###
-POST http://localhost:8080/devops_starter_war_exploded/api/login
-Content-Type: application/json
-
-{
-  "username": "admin",
-  "password": "test123"
-}
-###
-GET http://localhost:8080/devops_starter_war_exploded/api/info/admin
-x-access-token:eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjoiYWRtaW4iLCJleHAiOjE2NjcyOTYyMTAsImlhdCI6MTY2NzI5NDQxMCwiaXNzdWVyIjoic2VtZXN0ZXJzdGFydGNvZGUtZGF0MyIsInVzZXJuYW1lIjoiYWRtaW4ifQ.dlsMNiQc_OYU2HCa-WMzNImQ3qoNy2CGXEWAbXBQM3g"
-
-
-###
-POST http://localhost:8080/api/api2/
-Content-Type: application/json
-
-{
-  "City": "Beijing"
-}
+#GET http://localhost:8080/devops_starter_war_exploded/api/info
+#
+####
+#POST http://localhost:8080/devops_starter_war_exploded/api/login
+#Content-Type: application/json
+#
+#{
+#  "username": "admin",
+#  "password": "test123"
+#}
+####
+#GET http://localhost:8080/devops_starter_war_exploded/api/info/admin
+#x-access-token:eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjoiYWRtaW4iLCJleHAiOjE2NjcyOTYyMTAsImlhdCI6MTY2NzI5NDQxMCwiaXNzdWVyIjoic2VtZXN0ZXJzdGFydGNvZGUtZGF0MyIsInVzZXJuYW1lIjoiYWRtaW4ifQ.dlsMNiQc_OYU2HCa-WMzNImQ3qoNy2CGXEWAbXBQM3g"
+#
+#
+####
+#POST http://localhost:8080/api/api2/
+#Content-Type: application/json
+#
+#{
+#  "City": "Beijing"
+#}
 
 
 ###
@@ -27,10 +27,13 @@ POST http://localhost:8080/api/business/
 Content-Type: application/json
 
 {
-  "cvr": "testcvr",
+  "cvr": "testfirma",
   "name": "micfirma",
   "businessEmail": "mfirma@mf.com",
   "description": "test firma",
+
+  "businessPhoneNumber": "11221122",
+  "businessPhoneAreaCode": "+45",
 
   "address": "Lyngbyvej 1",
   "city": "Lyngby",
@@ -42,7 +45,7 @@ Content-Type: application/json
   "businessAccountEmail": "mic@business.com",
   "password": "123",
 
-  "phoneNumber": "60875888",
+  "phoneNumber": "44114411",
   "areaCode": "+45"
 }
 

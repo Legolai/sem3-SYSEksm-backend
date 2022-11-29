@@ -69,6 +69,10 @@ public class Account {
         this.updatedAt = currentTime.minusNanos(nano);
     }
 
+    public boolean verifyPassword(String checkPassword) {
+        return BCrypt.checkpw(checkPassword, this.password);
+    }
+
     public Long getId() {
         return id;
     }
@@ -111,10 +115,6 @@ public class Account {
         this.password = password;
     }
 
-    public boolean verifyPassword(String checkPassword) {
-        return BCrypt.checkpw(checkPassword, this.password);
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -143,4 +143,8 @@ public class Account {
         this.location = location;
     }
 
+    @Override
+    public String toString() {
+        return "Account{" + "id=" + id + ", email='" + email + '\'' + ", firstname='" + firstname + '\'' + ", lastname='" + lastname + '\'' + ", description='" + description + '\'' + ", password='" + password + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", number=" + number + ", location=" + location + '}';
+    }
 }

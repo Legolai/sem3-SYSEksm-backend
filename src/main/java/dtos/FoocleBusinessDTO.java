@@ -37,7 +37,7 @@ public class FoocleBusinessDTO {
     public FoocleBusinessDTO(FoocleBusiness business) {
         this.cvr = business.getId();
         this.name = business.getName();
-        this.email = business.getEmail();
+        this.email = business.getBusinessEmail();
         this.description = business.getDescription();
         this.createdAt = business.getCreatedAt();
         this.updatedAt = business.getUpdatedAt();
