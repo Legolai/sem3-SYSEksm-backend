@@ -4,13 +4,12 @@ import entities.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
-public class FoocleScoutDTO {
+public class BusinessAccountDTO {
 
-    private Long scoutId;
-//    private Set<ScoutRequestDTO> scoutRequests = new LinkedHashSet<>();
+    private Long businessAccountId;
+    private boolean isAdmin;
+    private String cvr;
 
     private Long accountId;
     private String email;
@@ -28,25 +27,32 @@ public class FoocleScoutDTO {
     private String zipCode;
     private String country;
 
-    public FoocleScoutDTO(Long scoutId, Long accountId, String email, String firstname, String lastname, String description, String password, LocalDateTime createdAt, LocalDateTime updatedAt, String phoneNumber, Long locationId, String address, String city, String zipCode, String country) {
-        this.scoutId = scoutId;
+
+    public BusinessAccountDTO(Long businessAccountId, boolean isAdmin, String cvr, Long accountId, String email, String phoneNumber, String firstname, String lastname, String description, String password, LocalDateTime createdAt, LocalDateTime updatedAt, Long locationId, String address, String city, String zipCode, String country) {
+        this.businessAccountId = businessAccountId;
+        this.isAdmin = isAdmin;
+        this.cvr = cvr;
+
         this.accountId = accountId;
         this.email = email;
+        this.phoneNumber = phoneNumber;
         this.firstname = firstname;
         this.lastname = lastname;
         this.description = description;
         this.password = password;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.phoneNumber = phoneNumber;
+
         this.locationId = locationId;
         this.address = address;
         this.city = city;
         this.zipCode = zipCode;
         this.country = country;
     }
-    public FoocleScoutDTO(FoocleScout foocleScout, Account account, Location location) {
-        this.scoutId = foocleScout.getId();
+    public BusinessAccountDTO(BusinessAccount businessAccount, Account account, Location location) {
+        this.businessAccountId = businessAccount.getId();
+        this.isAdmin = businessAccount.getIsAdmin();
+        this.cvr = businessAccount.getCvr().getId();
 
         this.accountId = account.getId();
         this.email = account.getEmail();
@@ -64,8 +70,10 @@ public class FoocleScoutDTO {
         this.zipCode = location.getZipCode();
         this.country = location.getCountry();
     }
-    public FoocleScoutDTO(FoocleScout foocleScout, Account account) {
-        this.scoutId = foocleScout.getId();
+    public BusinessAccountDTO(BusinessAccount businessAccount, Account account) {
+        this.businessAccountId = businessAccount.getId();
+        this.isAdmin = businessAccount.getIsAdmin();
+        this.cvr = businessAccount.getCvr().getId();
         this.accountId = account.getId();
         this.email = account.getEmail();
         this.phoneNumber = account.getPhoneNumber();
@@ -78,17 +86,20 @@ public class FoocleScoutDTO {
     }
 
 
-    public Long getScoutId() {
-        return scoutId;
+    public Long getBusinessAccountId() {
+        return businessAccountId;
+    }
+    public boolean getIsAdmin() {
+        return isAdmin;
+    }
+    public String getCvr() {
+        return cvr;
     }
     public Long getAccountId() {
         return accountId;
     }
     public String getEmail() {
         return email;
-    }
-    public String getPhoneNumber() {
-        return phoneNumber;
     }
     public String getFirstname() {
         return firstname;
@@ -108,6 +119,9 @@ public class FoocleScoutDTO {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
     public Long getLocationId() {
         return locationId;
     }
@@ -124,11 +138,14 @@ public class FoocleScoutDTO {
         return country;
     }
 
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+    public void setCvr(String cvr) {
+        this.cvr = cvr;
+    }
     public void setEmail(String email) {
         this.email = email;
-    }
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
     public void setFirstname(String firstname) {
         this.firstname = firstname;
@@ -148,6 +165,9 @@ public class FoocleScoutDTO {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
     public void setLocationId(Long locationId) {
         this.locationId = locationId;
     }
@@ -166,6 +186,6 @@ public class FoocleScoutDTO {
 
     @Override
     public String toString() {
-        return "FoocleScoutDTO{" + "scoutId=" + scoutId + ", accountId=" + accountId + ", email='" + email + '\'' + ", phoneNumber='" + phoneNumber + '\'' + ", firstname='" + firstname + '\'' + ", lastname='" + lastname + '\'' + ", description='" + description + '\'' + ", password='" + password + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", locationId=" + locationId + ", address='" + address + '\'' + ", city='" + city + '\'' + ", zipCode='" + zipCode + '\'' + ", country='" + country + '\'' + '}';
+        return "BusinessAccountDTO{" + "businessAccountId=" + businessAccountId + ", isAdmin=" + isAdmin + ", cvr='" + cvr + '\'' + ", accountId=" + accountId + ", email='" + email + '\'' + ", phoneNumber='" + phoneNumber + '\'' + ", firstname='" + firstname + '\'' + ", lastname='" + lastname + '\'' + ", description='" + description + '\'' + ", password='" + password + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", locationId=" + locationId + ", address='" + address + '\'' + ", city='" + city + '\'' + ", zipCode='" + zipCode + '\'' + ", country='" + country + '\'' + '}';
     }
 }

@@ -27,30 +27,26 @@ public class FoocleScoutResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createNewScout(String content) throws API_Exception {
-        String firstname, lastname;
-        String email;
-        String password;
-        String phoneNumber, areaCode;
+        String email, phoneNumber;
+        String firstname, lastname, password;
         try {
             JsonObject json = JsonParser.parseString(content).getAsJsonObject();
+            email = json.get("email").getAsString();
+            phoneNumber = json.get("phoneNumber").getAsString();
             firstname = json.get("firstname").getAsString();
             lastname = json.get("lastname").getAsString();
-            email = json.get("email").getAsString();
             password = json.get("password").getAsString();
-            phoneNumber = json.get("phoneNumber").getAsString();
-            areaCode = json.get("areaCode").getAsString();
         } catch (Exception e) {
             throw new API_Exception("Malformed JSON Supplied",400,e);
         }
 
         try {
-            FoocleScoutDTO scout = SCOUT_FACADE.createScout(firstname, lastname, email, password, phoneNumber, areaCode);
+            FoocleScoutDTO scout = SCOUT_FACADE.createScout(email, phoneNumber, firstname, lastname, password);
             return Response.ok(GSON.toJson(scout)).build();
 
         } catch (Exception ex) {
             Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
         }
         throw new API_Exception("Failed to create a new FoocleScout account!");
-
     }
 }

@@ -3,8 +3,6 @@ package facades;
 import dtos.FoocleScoutDTO;
 import entities.Account;
 import entities.FoocleScout;
-import entities.Phone;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -50,23 +48,21 @@ public class FoocleScoutFacade {
             throw new AuthenticationException("Invalid email or password");
         }
         FoocleScout scout = response.get(0);
-        FoocleScoutDTO res = new FoocleScoutDTO(scout, scout.getAccount(), scout.getAccount().getNumber());
+        FoocleScoutDTO res = new FoocleScoutDTO(scout, scout.getAccount());
         res.setPassword("");
         return res;
     }
 
-    public FoocleScoutDTO createScout(String firstname, String lastname, String email, String password, String phoneNumber, String areaCode) {
-        Phone phone = new Phone(phoneNumber, areaCode);
-        Account account = new Account(firstname, lastname, email, password, phone);
+    public FoocleScoutDTO createScout(String email, String phoneNumber, String firstname, String lastname, String password) {
+        Account account = new Account(email, phoneNumber, firstname, lastname, password);
         FoocleScout scout = new FoocleScout(account);
 
         executeInsideTransaction(em -> {
-            em.persist(phone);
             em.persist(account);
             em.persist(scout);
         });
 
-        return new FoocleScoutDTO(scout, account, phone);
+        return new FoocleScoutDTO(scout, account);
     }
 
     private <R> R executeWithClose(Function<EntityManager, R> action) {
