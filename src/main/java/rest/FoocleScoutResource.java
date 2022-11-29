@@ -1,15 +1,10 @@
 package rest;
 
 import com.google.gson.*;
-import com.nimbusds.jose.JOSEException;
 import dtos.FoocleScoutDTO;
-import entities.Role;
-import entities.User;
 import errorhandling.API_Exception;
 import errorhandling.GenericExceptionMapper;
 import facades.FoocleScoutFacade;
-import facades.UserFacade;
-import security.errorhandling.AuthenticationException;
 import utils.EMF_Creator;
 import utils.GsonLocalDateTime;
 
@@ -17,12 +12,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

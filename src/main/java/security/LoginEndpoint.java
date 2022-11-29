@@ -10,18 +10,17 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import dtos.AccountTokenDTO;
 import dtos.FoocleScoutDTO;
 import facades.FoocleScoutFacade;
-import facades.UserFacade;
+
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import entities.User;
+
 import errorhandling.API_Exception;
 
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -60,7 +59,7 @@ public class LoginEndpoint {
 
         try {
             FoocleScoutDTO scout = SCOUT_FACADE.getVeryfiedScout(email, password);
-            String token = createScoutToken(email);
+            String token = createToken(new AccountTokenDTO(scout.getAccountId(), scout.getEmail(), scout.getFirstname(), scout.getLastname()), Permission.FOOCLESCOUT);
             JsonObject responseJson = new JsonObject();
             responseJson.addProperty("email", email);
             responseJson.addProperty("token", token);
@@ -74,14 +73,17 @@ public class LoginEndpoint {
         }
         throw new AuthenticationException("Invalid username or password! Please try again");
     }
-    private String createScoutToken(String email) throws JOSEException {
+    private String createToken(AccountTokenDTO account, Permission permission) throws JOSEException {
         String issuer = "semesterstartcode-dat3";
 
         JWSSigner signer = new MACSigner(SharedSecret.getSharedKey());
         Date date = new Date();
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .subject(email)
-                .claim("email", email)
+                .subject(account.getEmail())
+                .claim("pms", permission)
+                .claim("fname", account.getFirstname())
+                .claim("lname", account.getLastname())
+                .claim("email", account.getEmail())
                 .claim("issuer", issuer)
                 .issueTime(date)
                 .expirationTime(new Date(date.getTime() + TOKEN_EXPIRE_TIME))

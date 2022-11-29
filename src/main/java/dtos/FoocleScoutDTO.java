@@ -79,7 +79,6 @@ public class FoocleScoutDTO {
         this.phoneNumber = phone.getId();
         this.areaCode = phone.getAreaCode();
     }
-
     public Long getScoutId() {
         return scoutId;
     }
