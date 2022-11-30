@@ -36,7 +36,7 @@ public class AccountPrincipal implements Principal {
 
     public boolean hasPermission(Permission permission) {
         boolean isAllowed = permission == this.permission;
-        if (permission == Permission.FOOCLEBUSINESS && this.permission == Permission.BUSINESSADMIN) isAllowed = true;
+        if (permission == Permission.BUSINESSACCOUNT && this.permission == Permission.BUSINESSADMIN) isAllowed = true;
 
         return isAllowed;
     }

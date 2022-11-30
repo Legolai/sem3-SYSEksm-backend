@@ -93,7 +93,13 @@ public class LoginEndpoint {
 
         try {
             BusinessAccountDTO businessAccount = BUSINESS_FACADE.getVeryfiedBusinessAccount(email, password);
-            String token = createToken(new AccountTokenDTO(businessAccount.getAccountId(), businessAccount.getEmail(), businessAccount.getFirstname(), businessAccount.getLastname()), Permission.FOOCLESCOUT);
+            AccountTokenDTO aToken = new AccountTokenDTO(businessAccount.getAccountId(), businessAccount.getEmail(), businessAccount.getFirstname(), businessAccount.getLastname());
+            String token;
+            if (businessAccount.getIsAdmin()) {
+                token = createToken(aToken, Permission.BUSINESSADMIN);
+            } else {
+                token = createToken(aToken, Permission.BUSINESSACCOUNT);
+            }
             JsonObject responseJson = new JsonObject();
             responseJson.addProperty("email", email);
             responseJson.addProperty("token", token);
