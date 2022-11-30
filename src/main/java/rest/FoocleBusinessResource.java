@@ -6,13 +6,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dtos.FoocleBusinessDTO;
 import dtos.FoocleScoutDTO;
+import dtos.FoocleSpotDTO;
 import errorhandling.API_Exception;
 import errorhandling.GenericExceptionMapper;
 import facades.FoocleBusinessFacade;
 import facades.FoocleScoutFacade;
+import security.Permission;
 import utils.EMF_Creator;
 import utils.GsonLocalDateTime;
 
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -70,6 +73,39 @@ public class FoocleBusinessResource {
             Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
         }
         throw new API_Exception("Failed to create a new FoocleBusiness!");
-
     }
+
+    @POST
+    @RolesAllowed(Permission.Types.BUSINESSADMIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/foocleSpot")
+    public Response createNewFoocleSpot(String content) throws API_Exception {
+        String businessAccountID, cvr;
+        String address, city, zipCode, country;
+
+        try {
+            JsonObject json = JsonParser.parseString(content).getAsJsonObject();
+            businessAccountID = json.get("businessAccountID").getAsString();
+            cvr = json.get("cvr").getAsString();
+
+            address = json.get("address").getAsString();
+            city = json.get("city").getAsString();
+            zipCode = json.get("zipCode").getAsString();
+            country = json.get("country").getAsString();
+        } catch (Exception e) {
+            throw new API_Exception("Malformed JSON Supplied",400,e);
+        }
+
+        try {
+            FoocleSpotDTO business = BUSINESS_FACADE.createFoocleSpot(businessAccountID, cvr, address, city, zipCode, country);
+            return Response.ok(GSON.toJson(business)).build();
+
+        } catch (Exception ex) {
+            Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        throw new API_Exception("Failed to create a new FoocleSpot!");
+    }
+
+
 }

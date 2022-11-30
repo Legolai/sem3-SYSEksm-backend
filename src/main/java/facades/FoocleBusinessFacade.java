@@ -3,6 +3,7 @@ package facades;
 import dtos.BusinessAccountDTO;
 import dtos.FoocleBusinessDTO;
 import dtos.FoocleScoutDTO;
+import dtos.FoocleSpotDTO;
 import entities.*;
 import security.errorhandling.AuthenticationException;
 
@@ -22,14 +23,7 @@ public class FoocleBusinessFacade {
     private static EntityManagerFactory emf;
     private static FoocleBusinessFacade instance;
 
-    private FoocleBusinessFacade() {
-    }
-
-    /**
-     *
-     * @param _emf
-     * @return the instance of this facade.
-     */
+    private FoocleBusinessFacade() {}
     public static FoocleBusinessFacade getFoocleBusinessFacade(EntityManagerFactory _emf) {
         if (instance == null) {
             emf = _emf;
@@ -37,6 +31,7 @@ public class FoocleBusinessFacade {
         }
         return instance;
     }
+
 
     public BusinessAccountDTO getVeryfiedBusinessAccount(String email, String password) throws AuthenticationException {
         List<BusinessAccount> response = executeWithClose(em -> {
@@ -60,19 +55,48 @@ public class FoocleBusinessFacade {
         Account account = new Account(businessAccountEmail, phoneNumber, password, firstname, lastname);
         BusinessAccount businessAccount = new BusinessAccount(true, account, foocleBusiness);
 
-//        executeInsideTransaction(em -> {
-//            em.persist(location);
-//            em.persist(foocleBusiness);
-//            em.persist(account);
-//            em.persist(businessAccount);
-//        });
-        executeInsideTransaction(em -> em.persist(location));
-        executeInsideTransaction(em -> em.persist(foocleBusiness));
-        executeInsideTransaction(em -> em.persist(account));
-        executeInsideTransaction(em -> em.persist(businessAccount));
+        executeInsideTransaction(em -> {
+            em.persist(location);
+            em.persist(foocleBusiness);
+            em.persist(account);
+            em.persist(businessAccount);
+        });
+//        executeInsideTransaction(em -> em.persist(location));
+//        executeInsideTransaction(em -> em.persist(foocleBusiness));
+//        executeInsideTransaction(em -> em.persist(account));
+//        executeInsideTransaction(em -> em.persist(businessAccount));
 
         return new FoocleBusinessDTO(foocleBusiness);
     }
+
+    public FoocleSpotDTO createFoocleSpot(String businessAccountID, String cvr, String address, String city, String zipCode, String country) {
+
+        BusinessAccount bAccount = executeWithClose(em -> em.find(BusinessAccount.class, businessAccountID));
+        FoocleBusiness foocleBusiness = executeWithClose(em -> em.find(FoocleBusiness.class, cvr));
+
+        Location location = new Location(address, city, zipCode, country);
+        FoocleSpot spot = new FoocleSpot(bAccount, foocleBusiness, location);
+
+        List<Location> response = executeWithClose(em -> {
+            TypedQuery<Location> query = em.createQuery("SELECT l FROM Location l WHERE l.address = :address", Location.class);
+            query.setParameter("address", address);
+            return query.getResultList();
+        });
+        executeInsideTransaction(em -> {
+            if (response.isEmpty()) {
+                em.persist(location);
+            }
+            em.persist(spot);
+        });
+        //        executeInsideTransaction(em -> em.persist(location));
+        //        executeInsideTransaction(em -> em.persist(foocleBusiness));
+        //        executeInsideTransaction(em -> em.persist(account));
+        //        executeInsideTransaction(em -> em.persist(businessAccount));
+
+        return new FoocleSpotDTO(spot);
+    }
+
+
 
     private <R> R executeWithClose(Function<EntityManager, R> action) {
         EntityManager em = emf.createEntityManager();
@@ -95,6 +119,4 @@ public class FoocleBusinessFacade {
             em.close();
         }
     }
-
-
 }
