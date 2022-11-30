@@ -64,7 +64,7 @@ public class DemoResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("business")
-    @RolesAllowed(Permission.Types.FOOCLEBUSINESS)
+    @RolesAllowed(Permission.Types.BUSINESSADMIN)
     public String getFromAdmin() {
         String thisuser = securityContext.getUserPrincipal().getName();
         return "{\"msg\": \"Hello to (admin) User: " + thisuser + "\"}";

@@ -1,14 +1,14 @@
 package security;
 
 public enum Permission {
-    FOOCLESCOUT(Types.FOOCLESCOUT),
-    FOOCLEBUSINESS(Types.FOOCLEBUSINESS),
-    BUSINESSADMIN(Types.BUSINESSADMIN);
+    BUSINESSADMIN(Types.BUSINESSADMIN),
+    BUSINESSACCOUNT(Types.BUSINESSACCOUNT),
+    FOOCLESCOUT(Types.FOOCLESCOUT);
 
     public class Types{
-        public static final String FOOCLESCOUT = "FOOCLESCOUT";
-        public static final String FOOCLEBUSINESS = "FOOCLEBUSINESS";
         public static final String BUSINESSADMIN = "BUSINESSADMIN";
+        public static final String BUSINESSACCOUNT = "BUSINESSACCOUNT";
+        public static final String FOOCLESCOUT = "FOOCLESCOUT";
     }
 
     private final String value;

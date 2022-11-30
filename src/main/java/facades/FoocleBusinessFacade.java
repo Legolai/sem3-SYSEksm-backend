@@ -1,5 +1,6 @@
 package facades;
 
+import dtos.BusinessAccountDTO;
 import dtos.FoocleBusinessDTO;
 import dtos.FoocleScoutDTO;
 import entities.*;
@@ -8,6 +9,8 @@ import security.errorhandling.AuthenticationException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -35,18 +38,19 @@ public class FoocleBusinessFacade {
         return instance;
     }
 
-    public User getVeryfiedUser(String username, String password) throws AuthenticationException {
-        EntityManager em = emf.createEntityManager();
-        User user;
-        try {
-            user = em.find(User.class, username);
-            if (user == null || !user.verifyPassword(password)) {
-                throw new AuthenticationException("Invalid user name or password");
-            }
-        } finally {
-            em.close();
+    public BusinessAccountDTO getVeryfiedBusinessAccount(String email, String password) throws AuthenticationException {
+        List<BusinessAccount> response = executeWithClose(em -> {
+            TypedQuery<BusinessAccount> query = em.createQuery("SELECT f FROM BusinessAccount f WHERE f.account.email = :email", BusinessAccount.class);
+            query.setParameter("email", email);
+            return query.getResultList();
+        });
+        if (response.isEmpty() || !response.get(0).getAccount().verifyPassword(password)) {
+            throw new AuthenticationException("Invalid email or password");
         }
-        return user;
+        BusinessAccount bAccount = response.get(0);
+        BusinessAccountDTO res = new BusinessAccountDTO(bAccount, bAccount.getAccount());
+        res.setPassword("");
+        return res;
     }
 
     public FoocleBusinessDTO createBusiness(String cvr, String name, String businessEmail, String businessPhoneNumber, String description, String address, String city, String zipCode, String country, String businessAccountEmail, String phoneNumber, String firstname, String lastname, String password) {
