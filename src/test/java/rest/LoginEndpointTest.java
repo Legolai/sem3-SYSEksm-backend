@@ -67,13 +67,10 @@ public class LoginEndpointTest {
             //Delete existing users and roles to get a "fresh" database
             em.createQuery("delete from FoocleScout").executeUpdate();
             em.createQuery("delete from Account").executeUpdate();
-            em.createQuery("delete from Phone").executeUpdate();
             em.createQuery("delete from Location").executeUpdate();
 
-            Phone phone =  new Phone("99 99 99 99", "+45");
-            Account account = new Account("test@email.com", "test", "test", "test123", phone);
+            Account account = new Account("test@email.com", "+45 99 99 99 99", "test", "test", "test123");
             FoocleScout foocleScout = new FoocleScout(account);
-            em.persist(phone);
             em.persist(account);
             em.persist(foocleScout);
             //System.out.println("Saved test data to database");

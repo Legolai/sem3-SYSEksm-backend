@@ -11,7 +11,9 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import dtos.AccountTokenDTO;
+import dtos.BusinessAccountDTO;
 import dtos.FoocleScoutDTO;
+import facades.FoocleBusinessFacade;
 import facades.FoocleScoutFacade;
 
 import java.util.Date;
@@ -38,6 +40,7 @@ public class LoginEndpoint {
     public static final int TOKEN_EXPIRE_TIME = 1000 * 60 * 30; //30 min
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     public static final FoocleScoutFacade SCOUT_FACADE = FoocleScoutFacade.getFoocleScoutFacade(EMF);
+    public static final FoocleBusinessFacade BUSINESS_FACADE = FoocleBusinessFacade.getFoocleBusinessFacade(EMF);
 
     @Context
     SecurityContext securityContext;
@@ -60,6 +63,37 @@ public class LoginEndpoint {
         try {
             FoocleScoutDTO scout = SCOUT_FACADE.getVeryfiedScout(email, password);
             String token = createToken(new AccountTokenDTO(scout.getAccountId(), scout.getEmail(), scout.getFirstname(), scout.getLastname()), Permission.FOOCLESCOUT);
+            JsonObject responseJson = new JsonObject();
+            responseJson.addProperty("email", email);
+            responseJson.addProperty("token", token);
+            return Response.ok(new Gson().toJson(responseJson)).build();
+
+        } catch (JOSEException | AuthenticationException ex) {
+            if (ex instanceof AuthenticationException) {
+                throw (AuthenticationException) ex;
+            }
+            Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        throw new AuthenticationException("Invalid username or password! Please try again");
+    }
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/business")
+    public Response businessAccountLogin(String jsonString) throws AuthenticationException, API_Exception {
+        String email;
+        String password;
+        try {
+            JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
+            email = json.get("email").getAsString();
+            password = json.get("password").getAsString();
+        } catch (Exception e) {
+            throw new API_Exception("Malformed JSON Suplied",400,e);
+        }
+
+        try {
+            BusinessAccountDTO businessAccount = BUSINESS_FACADE.getVeryfiedBusinessAccount(email, password);
+            String token = createToken(new AccountTokenDTO(businessAccount.getAccountId(), businessAccount.getEmail(), businessAccount.getFirstname(), businessAccount.getLastname()), Permission.FOOCLESCOUT);
             JsonObject responseJson = new JsonObject();
             responseJson.addProperty("email", email);
             responseJson.addProperty("token", token);
