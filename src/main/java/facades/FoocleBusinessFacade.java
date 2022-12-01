@@ -1,16 +1,11 @@
 package facades;
 
-import dtos.BusinessAccountDTO;
-import dtos.FoocleBusinessDTO;
-import dtos.FoocleScoutDTO;
-import dtos.FoocleSpotDTO;
+import dtos.*;
 import entities.*;
 import security.errorhandling.AuthenticationException;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -88,12 +83,20 @@ public class FoocleBusinessFacade {
             }
             em.persist(spot);
         });
-        //        executeInsideTransaction(em -> em.persist(location));
-        //        executeInsideTransaction(em -> em.persist(foocleBusiness));
-        //        executeInsideTransaction(em -> em.persist(account));
-        //        executeInsideTransaction(em -> em.persist(businessAccount));
 
         return new FoocleSpotDTO(spot);
+    }
+
+    public SpotMenuDTO createSpotMenu(String description, String pictures, String foodPrefences, LocalDateTime pickupTimeFrom, LocalDateTime pickupTimeTo, long fooclespotID) {
+
+        FoocleSpot foocleSpot = executeWithClose(em -> em.find(FoocleSpot.class, fooclespotID));
+        SpotMenu spotMenu = new SpotMenu(description, pictures, foodPrefences, pickupTimeFrom, pickupTimeTo, foocleSpot);
+
+        executeInsideTransaction(em -> {
+            em.persist(spotMenu);
+        });
+
+        return new SpotMenuDTO(spotMenu);
     }
 
 

@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import dtos.FoocleBusinessDTO;
 import dtos.FoocleScoutDTO;
 import dtos.FoocleSpotDTO;
+import dtos.SpotMenuDTO;
 import errorhandling.API_Exception;
 import errorhandling.GenericExceptionMapper;
 import facades.FoocleBusinessFacade;
@@ -106,6 +107,40 @@ public class FoocleBusinessResource {
         }
         throw new API_Exception("Failed to create a new FoocleSpot!");
     }
+
+    @POST
+    @RolesAllowed({Permission.Types.BUSINESSACCOUNT, Permission.Types.BUSINESSADMIN})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/spotMenu")
+    public Response createNewSpotMenu(String content) throws API_Exception {
+        String description, pictures, foodpreferences;
+        String pickupTimeFrom, pickupTimeTo;
+        long fooclespotID;
+
+            try {
+            JsonObject json = JsonParser.parseString(content).getAsJsonObject();
+            description = json.get("description").getAsString();
+            pictures = json.get("pictures").getAsString();
+            foodpreferences = json.get("foodpreferences").getAsString();
+
+            pickupTimeFrom = json.get("pickupTimeFrom").getAsString();
+            pickupTimeTo = json.get("pickupTimeTo").getAsString();
+            fooclespotID = json.get("fooclespotID").getAsLong();
+        } catch (Exception e) {
+            throw new API_Exception("Malformed JSON Supplied",400,e);
+        }
+
+        try {
+            SpotMenuDTO business = BUSINESS_FACADE.createSpotMenu(description, pictures, foodpreferences, LocalDateTime.parse(pickupTimeFrom), LocalDateTime.parse(pickupTimeTo), fooclespotID);
+            return Response.ok(GSON.toJson(business)).build();
+
+        } catch (Exception ex) {
+            Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        throw new API_Exception("Failed to create a new FoocleSpot!");
+    }
+
 
 
 }

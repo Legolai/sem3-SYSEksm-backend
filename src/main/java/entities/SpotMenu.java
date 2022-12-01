@@ -1,7 +1,8 @@
 package entities;
 
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 
 @Entity
 public class SpotMenu {
@@ -23,89 +24,97 @@ public class SpotMenu {
     private String foodPrefences;
 
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "pickup_time_from", nullable = false)
-    private Instant pickupTimeFrom;
+    private LocalDateTime pickupTimeFrom;
 
     @Column(name = "pickup_time_to", nullable = false)
-    private Instant pickupTimeTo;
+    private LocalDateTime pickupTimeTo;
 
     @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "fooclespots_ID", nullable = false)
     private FoocleSpot fooclespots;
 
+    public SpotMenu() {}
+    public SpotMenu(String description, String pictures, String foodPrefences, LocalDateTime pickupTimeFrom, LocalDateTime pickupTimeTo, FoocleSpot fooclespots) {
+        this.description = description;
+        this.pictures = pictures;
+        this.foodPrefences = foodPrefences;
+        this.pickupTimeFrom = pickupTimeFrom;
+        this.pickupTimeTo = pickupTimeTo;
+        this.fooclespots = fooclespots;
+    }
+
+    @PrePersist
+    public void onCreate() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        int nano = currentTime.getNano();
+        this.createdAt = currentTime.minusNanos(nano);
+        this.updatedAt = createdAt;
+    }
+    @PreUpdate
+    public void onUpdate() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        int nano = currentTime.getNano();
+        this.updatedAt = currentTime.minusNanos(nano);
+    }
+
+    
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
-
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
-
     public String getPictures() {
         return pictures;
     }
-
     public void setPictures(String pictures) {
         this.pictures = pictures;
     }
-
     public String getFoodPrefences() {
         return foodPrefences;
     }
-
     public void setFoodPrefences(String foodPrefences) {
         this.foodPrefences = foodPrefences;
     }
-
-    public Instant getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-
-    public Instant getPickupTimeFrom() {
+    public LocalDateTime getPickupTimeFrom() {
         return pickupTimeFrom;
     }
-
-    public void setPickupTimeFrom(Instant pickupTimeFrom) {
+    public void setPickupTimeFrom(LocalDateTime pickupTimeFrom) {
         this.pickupTimeFrom = pickupTimeFrom;
     }
-
-    public Instant getPickupTimeTo() {
+    public LocalDateTime getPickupTimeTo() {
         return pickupTimeTo;
     }
-
-    public void setPickupTimeTo(Instant pickupTimeTo) {
+    public void setPickupTimeTo(LocalDateTime pickupTimeTo) {
         this.pickupTimeTo = pickupTimeTo;
     }
-
-    public Instant getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
-
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
     public FoocleSpot getFooclespots() {
         return fooclespots;
     }
-
     public void setFooclespots(FoocleSpot fooclespots) {
         this.fooclespots = fooclespots;
     }
