@@ -47,7 +47,7 @@ public class FoocleBusinessFacade {
 
         Location location = new Location(address, city, zipCode, country);
         FoocleBusiness foocleBusiness = new FoocleBusiness(cvr, name, businessEmail, businessPhoneNumber, description, location);
-        Account account = new Account(businessAccountEmail, phoneNumber, password, firstname, lastname);
+        Account account = new Account(businessAccountEmail, phoneNumber, firstname, lastname, password);
         BusinessAccount businessAccount = new BusinessAccount(true, account, foocleBusiness);
 
         executeInsideTransaction(em -> {
