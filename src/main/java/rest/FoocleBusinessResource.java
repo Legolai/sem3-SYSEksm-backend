@@ -49,7 +49,7 @@ public class FoocleBusinessResource {
             name = json.get("name").getAsString();
             businessEmail = json.get("businessEmail").getAsString();
             description = json.get("description").getAsString();
-            businessPhoneNumber = json.get("businessPhoneNumber").getAsString();
+            businessPhoneNumber = json.get("businessPhone").getAsString();
 
             address = json.get("address").getAsString();
             city = json.get("city").getAsString();
@@ -58,10 +58,10 @@ public class FoocleBusinessResource {
 
             firstname = json.get("firstname").getAsString();
             lastname = json.get("lastname").getAsString();
-            businessAccountEmail = json.get("businessAccountEmail").getAsString();
+            businessAccountEmail = json.get("email").getAsString();
             password = json.get("password").getAsString();
 
-            phoneNumber = json.get("phoneNumber").getAsString();
+            phoneNumber = json.get("phone").getAsString();
         } catch (Exception e) {
             throw new API_Exception("Malformed JSON Supplied",400,e);
         }
@@ -82,24 +82,27 @@ public class FoocleBusinessResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/foocleSpot")
     public Response createNewFoocleSpot(String content) throws API_Exception {
-        String businessAccountID, cvr;
+        long businessAccountID;
         String address, city, zipCode, country;
 
         try {
             JsonObject json = JsonParser.parseString(content).getAsJsonObject();
-            businessAccountID = json.get("businessAccountID").getAsString();
-            cvr = json.get("cvr").getAsString();
+            businessAccountID = json.get("businessAccountID").getAsLong();
 
             address = json.get("address").getAsString();
+            if (address.equals("")) { throw new Exception(": Empty Address!"); }
             city = json.get("city").getAsString();
+            if (city.equals("")) { throw new Exception(": Empty City!"); }
             zipCode = json.get("zipCode").getAsString();
+            if (zipCode.equals("")) { throw new Exception(": Empty zipCode!"); }
             country = json.get("country").getAsString();
+            if (country.equals("")) { throw new Exception(": Empty Country!"); }
         } catch (Exception e) {
-            throw new API_Exception("Malformed JSON Supplied",400,e);
+            throw new API_Exception("Malformed JSON Supplied"+e.getMessage(),400,e);
         }
 
         try {
-            FoocleSpotDTO business = BUSINESS_FACADE.createFoocleSpot(businessAccountID, cvr, address, city, zipCode, country);
+            FoocleSpotDTO business = BUSINESS_FACADE.createFoocleSpot(businessAccountID, address, city, zipCode, country);
             return Response.ok(GSON.toJson(business)).build();
 
         } catch (Exception ex) {

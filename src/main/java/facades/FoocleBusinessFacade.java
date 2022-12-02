@@ -44,7 +44,6 @@ public class FoocleBusinessFacade {
     }
 
     public FoocleBusinessDTO createBusiness(String cvr, String name, String businessEmail, String businessPhoneNumber, String description, String address, String city, String zipCode, String country, String businessAccountEmail, String phoneNumber, String firstname, String lastname, String password) {
-
         Location location = new Location(address, city, zipCode, country);
         FoocleBusiness foocleBusiness = new FoocleBusiness(cvr, name, businessEmail, businessPhoneNumber, description, location);
         Account account = new Account(businessAccountEmail, phoneNumber, firstname, lastname, password);
@@ -56,39 +55,41 @@ public class FoocleBusinessFacade {
             em.persist(account);
             em.persist(businessAccount);
         });
-//        executeInsideTransaction(em -> em.persist(location));
-//        executeInsideTransaction(em -> em.persist(foocleBusiness));
-//        executeInsideTransaction(em -> em.persist(account));
-//        executeInsideTransaction(em -> em.persist(businessAccount));
 
         return new FoocleBusinessDTO(foocleBusiness);
     }
 
-    public FoocleSpotDTO createFoocleSpot(String businessAccountID, String cvr, String address, String city, String zipCode, String country) {
-
-        BusinessAccount bAccount = executeWithClose(em -> em.find(BusinessAccount.class, businessAccountID));
-        FoocleBusiness foocleBusiness = executeWithClose(em -> em.find(FoocleBusiness.class, cvr));
-
+    public FoocleSpotDTO createFoocleSpot(long businessAccountID, String address, String city, String zipCode, String country) {
         Location location = new Location(address, city, zipCode, country);
-        FoocleSpot spot = new FoocleSpot(bAccount, foocleBusiness, location);
 
-        List<Location> response = executeWithClose(em -> {
-            TypedQuery<Location> query = em.createQuery("SELECT l FROM Location l WHERE l.address = :address", Location.class);
+        FoocleSpot spot =  executeWithClose(em -> {
+            TypedQuery<BusinessAccount> query = em.createQuery("SELECT f FROM BusinessAccount f WHERE f.id = :id", BusinessAccount.class);
+            query.setParameter("id", businessAccountID);
+            TypedQuery<FoocleBusiness> query2 = em.createQuery("SELECT f FROM FoocleBusiness f WHERE f.id = :cvr", FoocleBusiness.class);
+            query2.setParameter("cvr", query.getResultList().get(0).getCvr().getId());
+            return new FoocleSpot(query.getResultList().get(0), query2.getResultList().get(0), location);
+        });
+        List<Location> responseLocation = executeWithClose(em -> {
+            TypedQuery<Location> query = em.createQuery("SELECT l FROM Location l " +
+                    "WHERE l.address = :address AND l.city = :city AND l.country = :country", Location.class);
             query.setParameter("address", address);
+            query.setParameter("city", city);
+            query.setParameter("country", country);
             return query.getResultList();
         });
+
         executeInsideTransaction(em -> {
-            if (response.isEmpty()) {
+            if (responseLocation.isEmpty()) {
                 em.persist(location);
+            } else {
+                spot.setLocation(responseLocation.get(0));
             }
             em.persist(spot);
         });
-
         return new FoocleSpotDTO(spot);
     }
 
     public SpotMenuDTO createSpotMenu(String description, String pictures, String foodPrefences, LocalDateTime pickupTimeFrom, LocalDateTime pickupTimeTo, long fooclespotID) {
-
         FoocleSpot foocleSpot = executeWithClose(em -> em.find(FoocleSpot.class, fooclespotID));
         SpotMenu spotMenu = new SpotMenu(description, pictures, foodPrefences, pickupTimeFrom, pickupTimeTo, foocleSpot);
 
@@ -105,6 +106,7 @@ public class FoocleBusinessFacade {
         EntityManager em = emf.createEntityManager();
         R result = action.apply(em);
         em.close();
+        System.out.println("closing WithClose transaction");
         return result;
     }
     private void executeInsideTransaction(Consumer<EntityManager> action) {
@@ -119,6 +121,7 @@ public class FoocleBusinessFacade {
             e.printStackTrace();
             throw e;
         } finally {
+            System.out.println("closing transaction");
             em.close();
         }
     }
