@@ -51,7 +51,6 @@ public class FoocleBusiness {
         this.createdAt = currentTime.minusNanos(nano);
         this.updatedAt = currentTime.minusNanos(nano);
     }
-
     @PreUpdate
     public void onUpdate() {
         LocalDateTime currentTime = LocalDateTime.now();
