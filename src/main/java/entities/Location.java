@@ -1,6 +1,9 @@
 package entities;
 
+import utils.GeoCodeFetcher;
+
 import javax.persistence.*;
+import java.io.IOException;
 
 @Entity
 @Table(name = "Locations")
@@ -22,6 +25,12 @@ public class Location {
     @Column(name = "country", nullable = false, length = 45)
     private String country;
 
+    @Column(name = "longitude", nullable = false)
+    private String longitude;
+
+    @Column(name = "latitude", nullable = false)
+    private String latitude;
+
     public Location() {
     }
     public Location(String address, String city, String zipCode, String country) {
@@ -29,6 +38,15 @@ public class Location {
         this.city = city;
         this.zipCode = zipCode;
         this.country = country;
+    }
+
+    @PreUpdate
+    @PrePersist
+    public void onCreate() throws IOException {
+        GeoCodeFetcher fetcher = new GeoCodeFetcher();
+        GeoCodeFetcher.GeoCode geoCode = fetcher.fetchGeoCode(this);
+        this.latitude = geoCode.getLatitude();
+        this.longitude = geoCode.getLongitude();
     }
 
     public Long getId() {
@@ -62,4 +80,19 @@ public class Location {
         this.country = country;
     }
 
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
 }

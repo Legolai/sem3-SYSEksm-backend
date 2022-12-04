@@ -1,17 +1,17 @@
 package dtos;
 
-import entities.FoocleSpot;
 import entities.SpotMenu;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SpotMenuDTO {
 
     private Long id;
     private String description;
     private String pictures;
-    private String foodPrefences;
+    private String foodPreferences;
 
     private LocalDateTime pickupTimeFrom;
     private LocalDateTime pickupTimeTo;
@@ -19,10 +19,10 @@ public class SpotMenuDTO {
     private long foocleSpotID;
 
 
-    public SpotMenuDTO(String description, String pictures, String foodPrefences, LocalDateTime pickupTimeFrom, LocalDateTime pickupTimeTo, long foocleSpotID) {
+    public SpotMenuDTO(String description, String pictures, String foodPreferences, LocalDateTime pickupTimeFrom, LocalDateTime pickupTimeTo, long foocleSpotID) {
         this.description = description;
         this.pictures = pictures;
-        this.foodPrefences = foodPrefences;
+        this.foodPreferences = foodPreferences;
         this.pickupTimeFrom = pickupTimeFrom;
         this.pickupTimeTo = pickupTimeTo;
         this.foocleSpotID = foocleSpotID;
@@ -30,10 +30,14 @@ public class SpotMenuDTO {
     public SpotMenuDTO(SpotMenu spotMenu) {
         this.description = spotMenu.getDescription();
         this.pictures = spotMenu.getPictures();
-        this.foodPrefences = spotMenu.getFoodPrefences();
+        this.foodPreferences = spotMenu.getFoodPrefences();
         this.pickupTimeFrom = spotMenu.getPickupTimeFrom();
         this.pickupTimeTo = spotMenu.getPickupTimeTo();
         this.foocleSpotID = spotMenu.getFooclespots().getId();
+    }
+
+    public static List<SpotMenuDTO> listToDTOs(List<SpotMenu> spotMenus) {
+        return spotMenus.stream().map(SpotMenuDTO::new).collect(Collectors.toList());
     }
 
     public Long getId() {
@@ -45,8 +49,8 @@ public class SpotMenuDTO {
     public String getPictures() {
         return pictures;
     }
-    public String getFoodPrefences() {
-        return foodPrefences;
+    public String getFoodPreferences() {
+        return foodPreferences;
     }
     public LocalDateTime getPickupTimeFrom() {
         return pickupTimeFrom;
@@ -64,8 +68,8 @@ public class SpotMenuDTO {
     public void setPictures(String pictures) {
         this.pictures = pictures;
     }
-    public void setFoodPrefences(String foodPrefences) {
-        this.foodPrefences = foodPrefences;
+    public void setFoodPreferences(String foodPreferences) {
+        this.foodPreferences = foodPreferences;
     }
     public void setPickupTimeFrom(LocalDateTime pickupTimeFrom) {
         this.pickupTimeFrom = pickupTimeFrom;

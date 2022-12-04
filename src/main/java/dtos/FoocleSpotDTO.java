@@ -3,6 +3,7 @@ package dtos;
 import entities.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class FoocleSpotDTO {
 
