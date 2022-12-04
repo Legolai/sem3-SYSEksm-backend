@@ -95,4 +95,8 @@ public class Location {
     public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
+    @Override
+    public String toString() {
+        return "Location{" + "id=" + id + ", address='" + address + '\'' + ", city='" + city + '\'' + ", zipCode='" + zipCode + '\'' + ", country='" + country + '\'' + '}';
+    }
 }

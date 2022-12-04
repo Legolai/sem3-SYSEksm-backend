@@ -2,7 +2,7 @@ package errorhandling;
 public class API_Exception extends Exception {
     int errorCode;
 
-    public API_Exception(String message,int errCode,Throwable course) {
+    public API_Exception(String message,int errCode, Throwable course) {
         super(message,course);
         this.errorCode = errCode;
     }

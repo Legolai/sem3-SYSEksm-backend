@@ -62,7 +62,7 @@ public class LoginEndpoint {
 
         try {
             FoocleScoutDTO scout = SCOUT_FACADE.getVeryfiedScout(email, password);
-            String token = createToken(new AccountTokenDTO(scout.getAccountId(), scout.getEmail(), scout.getFirstname(), scout.getLastname()), Permission.FOOCLESCOUT);
+            String token = createToken(new AccountTokenDTO(scout.getScoutId(), scout.getEmail(), scout.getFirstname(), scout.getLastname()), Permission.FOOCLESCOUT);
             JsonObject responseJson = new JsonObject();
             responseJson.addProperty("email", email);
             responseJson.addProperty("token", token);
@@ -93,7 +93,7 @@ public class LoginEndpoint {
 
         try {
             BusinessAccountDTO businessAccount = BUSINESS_FACADE.getVeryfiedBusinessAccount(email, password);
-            AccountTokenDTO aToken = new AccountTokenDTO(businessAccount.getAccountId(), businessAccount.getEmail(), businessAccount.getFirstname(), businessAccount.getLastname());
+            AccountTokenDTO aToken = new AccountTokenDTO(businessAccount.getBusinessAccountId(), businessAccount.getEmail(), businessAccount.getFirstname(), businessAccount.getLastname());
             String token;
             if (businessAccount.getIsAdmin()) {
                 token = createToken(aToken, Permission.BUSINESSADMIN);
@@ -121,9 +121,10 @@ public class LoginEndpoint {
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .subject(account.getEmail())
                 .claim("pms", permission)
+                .claim("ID", account.getId())
+                .claim("email", account.getEmail())
                 .claim("fname", account.getFirstname())
                 .claim("lname", account.getLastname())
-                .claim("email", account.getEmail())
                 .claim("issuer", issuer)
                 .issueTime(date)
                 .expirationTime(new Date(date.getTime() + TOKEN_EXPIRE_TIME))
