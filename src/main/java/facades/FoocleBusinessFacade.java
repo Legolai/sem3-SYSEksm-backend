@@ -6,6 +6,7 @@ import security.errorhandling.AuthenticationException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -88,6 +89,23 @@ public class FoocleBusinessFacade {
         });
         return new FoocleSpotDTO(spot);
     }
+    public List<FoocleSpotDTO> getFoocleSpotsForCVR(long businessAccountID) {
+        List<FoocleSpot> spots =  executeWithClose(em -> {
+            TypedQuery<BusinessAccount> query = em.createQuery("SELECT f FROM BusinessAccount f WHERE f.id = :id", BusinessAccount.class);
+            query.setParameter("id", businessAccountID);
+            TypedQuery<FoocleSpot> query2 = em.createQuery("SELECT f FROM FoocleSpot f WHERE f.cvr = :cvr", FoocleSpot.class);
+            query2.setParameter("cvr", query.getResultList().get(0).getCvr().getId());
+            return query2.getResultList();
+        });
+
+        List<FoocleSpotDTO> result = new ArrayList<>();
+        for (FoocleSpot spot:spots) {
+            result.add(new FoocleSpotDTO(spot));
+        }
+
+        return result;
+    }
+
 
     public SpotMenuDTO createSpotMenu(String description, String pictures, String foodPrefences, LocalDateTime pickupTimeFrom, LocalDateTime pickupTimeTo, long fooclespotID) {
         FoocleSpot foocleSpot = executeWithClose(em -> em.find(FoocleSpot.class, fooclespotID));
@@ -106,7 +124,7 @@ public class FoocleBusinessFacade {
         EntityManager em = emf.createEntityManager();
         R result = action.apply(em);
         em.close();
-        System.out.println("closing WithClose transaction");
+//        System.out.println("closing WithClose transaction");
         return result;
     }
     private void executeInsideTransaction(Consumer<EntityManager> action) {
@@ -121,7 +139,7 @@ public class FoocleBusinessFacade {
             e.printStackTrace();
             throw e;
         } finally {
-            System.out.println("closing transaction");
+//            System.out.println("closing transaction");
             em.close();
         }
     }

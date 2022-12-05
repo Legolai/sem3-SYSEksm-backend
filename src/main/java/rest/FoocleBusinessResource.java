@@ -18,13 +18,11 @@ import utils.GsonLocalDateTime;
 
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -102,13 +100,37 @@ public class FoocleBusinessResource {
         }
 
         try {
-            FoocleSpotDTO business = BUSINESS_FACADE.createFoocleSpot(businessAccountID, address, city, zipCode, country);
-            return Response.ok(GSON.toJson(business)).build();
+            FoocleSpotDTO spot = BUSINESS_FACADE.createFoocleSpot(businessAccountID, address, city, zipCode, country);
+            return Response.ok(GSON.toJson(spot)).build();
 
         } catch (Exception ex) {
             Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
         }
         throw new API_Exception("Failed to create a new FoocleSpot!");
+    }
+    @GET
+    @RolesAllowed({Permission.Types.BUSINESSACCOUNT, Permission.Types.BUSINESSADMIN})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/foocleSpot")
+    public Response getAllFoocleSpotsForCVR(String content) throws API_Exception {
+        long businessAccountID;
+
+        try {
+            JsonObject json = JsonParser.parseString(content).getAsJsonObject();
+            businessAccountID = json.get("businessAccountID").getAsLong();
+        } catch (Exception e) {
+            throw new API_Exception("Malformed JSON Supplied"+e.getMessage(),400,e);
+        }
+
+        try {
+            List<FoocleSpotDTO> spots = BUSINESS_FACADE.getFoocleSpotsForCVR(businessAccountID);
+            return Response.ok(GSON.toJson(spots)).build();
+
+        } catch (Exception ex) {
+            Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        throw new API_Exception("Failed to get FoocleSpots!");
     }
 
     @POST
