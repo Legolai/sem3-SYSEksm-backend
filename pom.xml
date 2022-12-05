@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dat.sem3</groupId>
-    <artifactId>sem3-CA2-backend</artifactId>
+    <artifactId>sem3-syseksm-backend</artifactId>
     <version>1.0.1</version>
     <packaging>war</packaging>
 
-    <name>sem3-CA2-backend</name>
+    <name>sem3-syseksm-backend</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -20,7 +20,7 @@
 
         <!-- TODO: Add your own database name -->
         <!-- IMPORTANT-1: The database should exist on your droplet -->
-        <db.name>weatherNCat</db.name>
+        <db.name>foocleDB</db.name>
     </properties>
     
     <dependencies>
