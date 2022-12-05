@@ -1,0 +1,145 @@
+@startuml "Class diagram"
+
+page 2x2
+skinparam pageMargin 10
+
+package "FoocleBusiness" {
+    class FoocleBusiness {
+      - cvr: String
+      - name: String
+      - businessEmail: String
+      - phoneNumber: String
+      - address: Location
+      - description: String
+      - foocleSpots: List<FoocleSpot>
+      - reviews: List<Review>
+      - accounts: List<FoocleBusinessAccount>
+      - createdAt: LocalDateTime
+      - updatedAt: LocalDateTime
+    }
+    class BusinessAccount {
+      - account: Account
+      - FoocleBusinessId: String
+      - isAdmin: boolean
+    }
+    class FoocleSpot {
+      - id: long
+      - contractPerson: BusinessAccount
+      - menues: List<SpotMenu>
+      - location: Location
+      - businessId: String
+      - createdAt: LocalDateTime
+      - updatedAt: LocalDateTime
+    }
+    package "SpotMenu" {
+        class SpotMenu {
+          - id: long
+          - description: String
+          - pictures: List<String>
+          - foodPrefences: Set<FoodPrefence>
+          - createdAt: LocalDateTime
+          - updatedAt: LocalDateTime
+          - pickupTimeFrom: LocalDateTime
+          - pickupTimeTo: LocalDateTime
+        }
+        enum FoodPrefence {
+              VEGAN
+              VEGETARIAN
+              PESCETAR
+              FLEXITAR
+              POLLOTAR
+        }
+    }
+}
+
+package "FoocleScout" {
+    class FoocleScout {
+          - account: Account
+          - reviews: List<Review>
+    }
+    package "ScoutRequest" {
+        class ScoutRequest {
+          - id: long
+          - scoutId: long
+          - menuId: long
+          - status: ScoutRequestStatus
+          - optionalMsg: String
+        }
+        enum ScoutRequestStatus {
+          PENDING
+          DENIED
+          ACCEPTED
+          CANCELED
+        }
+    }
+}
+
+
+package "Account" {
+    class Account {
+      - email: String
+      - phoneNumber: String
+      - firstname: String
+      - lastname: String
+      - description: String
+      - password: String
+      - notifications: NotificationHistory
+      - createdAt: LocalDateTime
+      - updatedAt: LocalDateTime
+    }
+    class Notification {
+      - id: long
+      - requestId: long
+      - msg: String
+      - createdAt: LocalDateTime
+    }
+}
+
+class Location {
+  - address: String
+  - city: String
+  - zipCode: String
+  - country: String
+}
+
+class Review {
+  - id: long
+  - requestId: long
+  - locacation: Location
+  - businessId: String
+  - rating: float
+  - description: String
+}
+
+
+
+'-------------------------------------
+
+BusinessAccount --* Account
+FoocleScout --* Account
+
+FoocleBusiness *-d- BusinessAccount
+BusinessAccount *-l- FoocleSpot
+FoocleBusiness *-r- FoocleSpot
+FoocleSpot *-u- SpotMenu
+SpotMenu -* FoodPrefence
+
+FoocleScout *-d- ScoutRequest
+ScoutRequestStatus *- ScoutRequest
+
+SpotMenu *-- ScoutRequest
+
+
+Account -u-* Location
+FoocleBusiness --* Location
+FoocleSpot --* Location
+
+Location *-r- Review
+FoocleBusiness *-- Review
+FoocleScout o-u- Review
+
+Notification *-- ScoutRequest
+Notification -l-* Account
+
+@enduml
+@enduml

@@ -1,7 +1,6 @@
 package rest;
 
-import entities.User;
-import entities.Role;
+import entities.*;
 
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
@@ -66,23 +65,14 @@ public class LoginEndpointTest {
         try {
             em.getTransaction().begin();
             //Delete existing users and roles to get a "fresh" database
-            em.createQuery("delete from User").executeUpdate();
-            em.createQuery("delete from Role").executeUpdate();
+            em.createQuery("delete from FoocleScout").executeUpdate();
+            em.createQuery("delete from Account").executeUpdate();
+            em.createQuery("delete from Location").executeUpdate();
 
-            Role userRole = new Role("user");
-            Role adminRole = new Role("admin");
-            User user = new User("user", "test");
-            user.addRole(userRole);
-            User admin = new User("admin", "test");
-            admin.addRole(adminRole);
-            User both = new User("user_admin", "test");
-            both.addRole(userRole);
-            both.addRole(adminRole);
-            em.persist(userRole);
-            em.persist(adminRole);
-            em.persist(user);
-            em.persist(admin);
-            em.persist(both);
+            Account account = new Account("test@email.com", "+45 99 99 99 99", "test", "test", "test123");
+            FoocleScout foocleScout = new FoocleScout(account);
+            em.persist(account);
+            em.persist(foocleScout);
             //System.out.println("Saved test data to database");
             em.getTransaction().commit();
         } finally {
@@ -94,13 +84,13 @@ public class LoginEndpointTest {
     private static String securityToken;
 
     //Utility method to login and set the returned securityToken
-    private static void login(String role, String password) {
-        String json = String.format("{username: \"%s\", password: \"%s\"}", role, password);
+    private static void loginScout(String email, String password) {
+        String json = String.format("{email: \"%s\", password: \"%s\"}", email, password);
         securityToken = given()
                 .contentType("application/json")
                 .body(json)
                 //.when().post("/api/login")
-                .when().post("/login")
+                .when().post("/login/scout")
                 .then()
                 .extract().path("token");
         //System.out.println("TOKEN ---> " + securityToken);
@@ -125,9 +115,10 @@ public class LoginEndpointTest {
                 .body("msg", equalTo("Hello anonymous"));
     }
 
+    @Disabled
     @Test
     public void testRestForAdmin() {
-        login("admin", "test");
+//        login("admin", "test");
         given()
                 .contentType("application/json")
                 .accept(ContentType.JSON)
@@ -139,31 +130,31 @@ public class LoginEndpointTest {
     }
 
     @Test
-    public void testRestForUser() {
-        login("user", "test");
+    public void testRestForScout() {
+        loginScout("test@email.com", "test123");
         given()
                 .contentType("application/json")
                 .header("x-access-token", securityToken)
                 .when()
-                .get("/info/user").then()
+                .get("/info/scout").then()
                 .statusCode(200)
-                .body("msg", equalTo("Hello to User: user"));
+                .body("msg", equalTo("Hello to User: test@email.com"));
     }
 
     @Test
-    public void testAutorizedUserCannotAccesAdminPage() {
-        login("user", "test");
+    public void testAutorizedUserCannotAccesBusinessPage() {
+        loginScout("test@email.com", "test123");
         given()
                 .contentType("application/json")
                 .header("x-access-token", securityToken)
                 .when()
-                .get("/info/admin").then() //Call Admin endpoint as user
+                .get("/info/business").then() //Call Admin endpoint as user
                 .statusCode(401);
     }
-
+    @Disabled
     @Test
     public void testAutorizedAdminCannotAccesUserPage() {
-        login("admin", "test");
+//        login("admin", "test");
         given()
                 .contentType("application/json")
                 .header("x-access-token", securityToken)
@@ -173,37 +164,12 @@ public class LoginEndpointTest {
     }
 
     @Test
-    public void testRestForMultiRole1() {
-        login("user_admin", "test");
-        given()
-                .contentType("application/json")
-                .accept(ContentType.JSON)
-                .header("x-access-token", securityToken)
-                .when()
-                .get("/info/admin").then()
-                .statusCode(200)
-                .body("msg", equalTo("Hello to (admin) User: user_admin"));
-    }
-
-    @Test
-    public void testRestForMultiRole2() {
-        login("user_admin", "test");
-        given()
-                .contentType("application/json")
-                .header("x-access-token", securityToken)
-                .when()
-                .get("/info/user").then()
-                .statusCode(200)
-                .body("msg", equalTo("Hello to User: user_admin"));
-    }
-
-    @Test
     public void userNotAuthenticated() {
         logOut();
         given()
                 .contentType("application/json")
                 .when()
-                .get("/info/user").then()
+                .get("/info/scout").then()
                 .statusCode(403)
                 .body("code", equalTo(403))
                 .body("message", equalTo("Not authenticated - do login"));
@@ -215,7 +181,7 @@ public class LoginEndpointTest {
         given()
                 .contentType("application/json")
                 .when()
-                .get("/info/user").then()
+                .get("/info/scout").then()
                 .statusCode(403)
                 .body("code", equalTo(403))
                 .body("message", equalTo("Not authenticated - do login"));

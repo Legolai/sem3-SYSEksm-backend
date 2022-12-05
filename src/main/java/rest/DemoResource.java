@@ -1,7 +1,5 @@
 package rest;
 
-import com.google.gson.Gson;
-import entities.User;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
@@ -14,6 +12,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
+
+import entities.Account;
+import security.Permission;
 import utils.EMF_Creator;
 
 /**
@@ -43,8 +44,8 @@ public class DemoResource {
 
         EntityManager em = EMF.createEntityManager();
         try {
-            TypedQuery<User> query = em.createQuery ("select u from User u",entities.User.class);
-            List<User> users = query.getResultList();
+            TypedQuery<Account> query = em.createQuery ("select u from Account u", Account.class);
+            List<Account> users = query.getResultList();
             return "[" + users.size() + "]";
         } finally {
             em.close();
@@ -53,8 +54,8 @@ public class DemoResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("user")
-    @RolesAllowed("user")
+    @Path("scout")
+    @RolesAllowed({Permission.Types.FOOCLESCOUT})
     public String getFromUser() {
         String thisuser = securityContext.getUserPrincipal().getName();
         return "{\"msg\": \"Hello to User: " + thisuser + "\"}";
@@ -62,8 +63,8 @@ public class DemoResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("admin")
-    @RolesAllowed("admin")
+    @Path("business")
+    @RolesAllowed(Permission.Types.BUSINESSADMIN)
     public String getFromAdmin() {
         String thisuser = securityContext.getUserPrincipal().getName();
         return "{\"msg\": \"Hello to (admin) User: " + thisuser + "\"}";
