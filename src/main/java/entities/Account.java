@@ -13,7 +13,7 @@ public class Account {
     @Column(name = "account_ID", nullable = false)
     private Long id;
 
-    @Column(name = "email", nullable = false, length = 45)
+    @Column(name = "email",unique = true , nullable = false, length = 45)
     private String email;
 
     @Column(name = "phoneNumber", nullable = false, length = 45)
