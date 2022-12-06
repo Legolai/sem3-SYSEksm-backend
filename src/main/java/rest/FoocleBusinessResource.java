@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dtos.FoocleBusinessDTO;
-import dtos.FoocleScoutDTO;
-import dtos.FoocleSpotDTO;
-import dtos.SpotMenuDTO;
+import dtos.*;
 import errorhandling.API_Exception;
 import errorhandling.GenericExceptionMapper;
 import facades.FoocleBusinessFacade;
@@ -21,6 +18,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
@@ -74,97 +72,6 @@ public class FoocleBusinessResource {
         throw new API_Exception("Failed to create a new FoocleBusiness!");
     }
 
-    @POST
-    @RolesAllowed(Permission.Types.BUSINESSADMIN)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/foocleSpot")
-    public Response createNewFoocleSpot(String content) throws API_Exception {
-        long businessAccountID;
-        String address, city, zipCode, country;
-
-        try {
-            JsonObject json = JsonParser.parseString(content).getAsJsonObject();
-            businessAccountID = json.get("businessAccountID").getAsLong();
-
-            address = json.get("address").getAsString();
-            if (address.equals("")) { throw new Exception(": Empty Address!"); }
-            city = json.get("city").getAsString();
-            if (city.equals("")) { throw new Exception(": Empty City!"); }
-            zipCode = json.get("zipCode").getAsString();
-            if (zipCode.equals("")) { throw new Exception(": Empty zipCode!"); }
-            country = json.get("country").getAsString();
-            if (country.equals("")) { throw new Exception(": Empty Country!"); }
-        } catch (Exception e) {
-            throw new API_Exception("Malformed JSON Supplied"+e.getMessage(),400,e);
-        }
-
-        try {
-            FoocleSpotDTO spot = BUSINESS_FACADE.createFoocleSpot(businessAccountID, address, city, zipCode, country);
-            return Response.ok(GSON.toJson(spot)).build();
-
-        } catch (Exception ex) {
-            Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        throw new API_Exception("Failed to create a new FoocleSpot!");
-    }
-    @GET
-    @RolesAllowed({Permission.Types.BUSINESSACCOUNT, Permission.Types.BUSINESSADMIN})
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/foocleSpot")
-    public Response getAllFoocleSpotsForCVR(String content) throws API_Exception {
-        long businessAccountID;
-
-        try {
-            JsonObject json = JsonParser.parseString(content).getAsJsonObject();
-            businessAccountID = json.get("businessAccountID").getAsLong();
-        } catch (Exception e) {
-            throw new API_Exception("Malformed JSON Supplied"+e.getMessage(),400,e);
-        }
-
-        try {
-            List<FoocleSpotDTO> spots = BUSINESS_FACADE.getFoocleSpotsForCVR(businessAccountID);
-            return Response.ok(GSON.toJson(spots)).build();
-
-        } catch (Exception ex) {
-            Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        throw new API_Exception("Failed to get FoocleSpots!");
-    }
-
-    @POST
-    @RolesAllowed({Permission.Types.BUSINESSACCOUNT, Permission.Types.BUSINESSADMIN})
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/spotMenu")
-    public Response createNewSpotMenu(String content) throws API_Exception {
-        String description, pictures, foodpreferences;
-        String pickupTimeFrom, pickupTimeTo;
-        long fooclespotID;
-
-            try {
-            JsonObject json = JsonParser.parseString(content).getAsJsonObject();
-            description = json.get("description").getAsString();
-            pictures = json.get("pictures").getAsString();
-            foodpreferences = json.get("foodpreferences").getAsString();
-
-            pickupTimeFrom = json.get("pickupTimeFrom").getAsString();
-            pickupTimeTo = json.get("pickupTimeTo").getAsString();
-            fooclespotID = json.get("fooclespotID").getAsLong();
-        } catch (Exception e) {
-            throw new API_Exception("Malformed JSON Supplied",400,e);
-        }
-
-        try {
-            SpotMenuDTO business = BUSINESS_FACADE.createSpotMenu(description, pictures, foodpreferences, LocalDateTime.parse(pickupTimeFrom), LocalDateTime.parse(pickupTimeTo), fooclespotID);
-            return Response.ok(GSON.toJson(business)).build();
-
-        } catch (Exception ex) {
-            Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        throw new API_Exception("Failed to create a new FoocleSpot!");
-    }
 
 
 

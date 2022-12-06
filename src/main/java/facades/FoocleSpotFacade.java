@@ -38,32 +38,50 @@ public class FoocleSpotFacade {
         });
         return FoocleSpotAvailabeDTO.listToDTOs(foocleSpotList);
     }
-
-    public FoocleSpotDTO createFoocleSpot(long businessAccountID, String cvr, String address, String city, String zipCode, String country) {
-
-        BusinessAccount bAccount = executeWithClose(em -> em.find(BusinessAccount.class, businessAccountID));
-        FoocleBusiness foocleBusiness = executeWithClose(em -> em.find(FoocleBusiness.class, cvr));
-
+    public FoocleSpotDTO createFoocleSpot(long businessAccountID, String address, String city, String zipCode, String country) {
         Location location = new Location(address, city, zipCode, country);
-        FoocleSpot spot = new FoocleSpot(bAccount, foocleBusiness, location);
 
-        List<Location> response = executeWithClose(em -> {
-            TypedQuery<Location> query = em.createQuery("SELECT l FROM Location l WHERE l.address = :address", Location.class);
+        FoocleSpot spot =  executeWithClose(em -> {
+            TypedQuery<BusinessAccount> query = em.createQuery("SELECT f FROM BusinessAccount f WHERE f.id = :id", BusinessAccount.class);
+            query.setParameter("id", businessAccountID);
+            TypedQuery<FoocleBusiness> query2 = em.createQuery("SELECT f FROM FoocleBusiness f WHERE f.id = :cvr", FoocleBusiness.class);
+            query2.setParameter("cvr", query.getResultList().get(0).getCvr().getId());
+            return new FoocleSpot(query.getResultList().get(0), query2.getResultList().get(0), location);
+        });
+        List<Location> responseLocation = executeWithClose(em -> {
+            TypedQuery<Location> query = em.createQuery("SELECT l FROM Location l " +
+                    "WHERE l.address = :address AND l.city = :city AND l.country = :country", Location.class);
             query.setParameter("address", address);
+            query.setParameter("city", city);
+            query.setParameter("country", country);
             return query.getResultList();
         });
+
         executeInsideTransaction(em -> {
-            if (response.isEmpty()) {
+            if (responseLocation.isEmpty()) {
                 em.persist(location);
+            } else {
+                spot.setLocation(responseLocation.get(0));
             }
             em.persist(spot);
         });
-
         return new FoocleSpotDTO(spot);
     }
+    public List<FoocleSpotAvailabeDTO> getFoocleSpotsForCVR(long businessAccountID) {
+        System.out.println("before executewith");
+        List<FoocleSpot> spots =  executeWithClose(em -> {
+            TypedQuery<BusinessAccount> query = em.createQuery("SELECT f FROM BusinessAccount f WHERE f.id = :id", BusinessAccount.class);
+            query.setParameter("id", businessAccountID);
+            TypedQuery<FoocleSpot> query2 = em.createQuery("SELECT f FROM FoocleSpot f WHERE f.cvr.id = :cvr", FoocleSpot.class);
+            query2.setParameter("cvr", query.getResultList().get(0).getCvr().getId());
+            return query2.getResultList();
+        });
+        System.out.println("after executewith");
+        return FoocleSpotAvailabeDTO.listToDTOs(spots);
+    }
+
 
     public SpotMenuDTO createSpotMenu(String description, String pictures, String foodPrefences, LocalDateTime pickupTimeFrom, LocalDateTime pickupTimeTo, long fooclespotID) {
-
         FoocleSpot foocleSpot = executeWithClose(em -> em.find(FoocleSpot.class, fooclespotID));
         SpotMenu spotMenu = new SpotMenu(description, pictures, foodPrefences, pickupTimeFrom, pickupTimeTo, foocleSpot);
 
@@ -73,6 +91,7 @@ public class FoocleSpotFacade {
 
         return new SpotMenuDTO(spotMenu);
     }
+
 
 
     private <R> R executeWithClose(Function<EntityManager, R> action) {

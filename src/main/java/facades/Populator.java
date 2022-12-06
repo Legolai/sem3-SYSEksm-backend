@@ -23,7 +23,7 @@ public class Populator {
         location.setZipCode("2820");
         location.setCountry("danmark");
         FoocleSpotFacade foocleSpotFacade = FoocleSpotFacade.getInstance(emf);
-        foocleSpotFacade.createFoocleSpot(1L, "1", location.getAddress(), location.getCity(), location.getZipCode(), location.getCountry());
+        //foocleSpotFacade.createFoocleSpot(1L, "1", location.getAddress(), location.getCity(), location.getZipCode(), location.getCountry());
 
     }
     
