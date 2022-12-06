@@ -91,6 +91,15 @@ public class FoocleSpotFacade {
 
         return new SpotMenuDTO(spotMenu);
     }
+    public List<SpotMenuDTO> getAllMenusForSpot(long id) {
+        List<SpotMenu> spotMenuList = executeWithClose(em -> {
+            TypedQuery<SpotMenu> query = em.createQuery("SELECT m FROM SpotMenu m WHERE m.fooclespots.id = :id", SpotMenu.class);
+            query.setParameter("id", id);
+            return query.getResultList();
+        });
+
+        return SpotMenuDTO.listToDTOs(spotMenuList);
+    }
 
 
 

@@ -19,6 +19,10 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.nio.charset.StandardCharsets;
@@ -131,5 +135,13 @@ public class FoocleSpotResource {
             Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
         }
         throw new API_Exception("Failed to create a new FoocleSpot!");
+    }
+    @GET
+    @Path("/{id}/menu")
+    @PermitAll
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllMenusForSpot(@PathParam("id") long id) {
+        List<SpotMenuDTO> list = SPOT_FACADE.getAllMenusForSpot(id);
+        return Response.ok().entity(GSON.toJson(list)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
     }
 }
