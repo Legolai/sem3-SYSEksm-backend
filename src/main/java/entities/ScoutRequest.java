@@ -34,10 +34,6 @@ public class ScoutRequest {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public ScoutRequest() {
-
-    }
-
     @PrePersist
     public void onCreate() {
         LocalDateTime currentTime = LocalDateTime.now();
