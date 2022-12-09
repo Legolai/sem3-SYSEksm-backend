@@ -33,7 +33,7 @@ public class SpotMenuDTO {
         this.foodPreferences = spotMenu.getFoodPrefences();
         this.pickupTimeFrom = spotMenu.getPickupTimeFrom();
         this.pickupTimeTo = spotMenu.getPickupTimeTo();
-        this.foocleSpotID = spotMenu.getFooclespots().getId();
+        this.foocleSpotID = spotMenu.getFooclespot().getId();
     }
 
     public static List<SpotMenuDTO> listToDTOs(List<SpotMenu> spotMenus) {
