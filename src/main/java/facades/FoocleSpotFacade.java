@@ -41,7 +41,7 @@ public class FoocleSpotFacade {
 
     public List<SpotMenuDTO> getAllMenusForSpot(long id) {
         List<SpotMenu> spotMenuList = executeWithClose(em -> {
-            TypedQuery<SpotMenu> query = em.createQuery("SELECT m FROM SpotMenu m WHERE m.fooclespots.id = :id", SpotMenu.class);
+            TypedQuery<SpotMenu> query = em.createQuery("SELECT m FROM SpotMenu m WHERE m.fooclespot.id = :id", SpotMenu.class);
             query.setParameter("id", id);
             return query.getResultList();
         });
