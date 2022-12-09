@@ -38,6 +38,14 @@ public class FoocleScoutFacade {
         return instance;
     }
 
+    public long getAccountId(long id) {
+        return executeWithClose(em -> {
+            TypedQuery<Long> query = em.createQuery("SELECT f.account.id FROM FoocleScout f WHERE f.id = :id", Long.class);
+            query.setParameter("id", id);
+            return query.getSingleResult();
+        });
+    }
+
     public FoocleScoutDTO getVeryfiedScout(String email, String password) throws AuthenticationException {
         List<FoocleScout> response = executeWithClose(em -> {
             TypedQuery<FoocleScout> query = em.createQuery("SELECT f FROM FoocleScout f WHERE f.account.email = :email", FoocleScout.class);
