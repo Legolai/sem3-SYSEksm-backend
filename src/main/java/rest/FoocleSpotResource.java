@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dtos.FoocleSpotAvailabeDTO;
 import dtos.FoocleSpotDTO;
+import dtos.ScoutRequestDTO;
 import dtos.SpotMenuDTO;
 import errorhandling.API_Exception;
 import errorhandling.GenericExceptionMapper;
@@ -101,25 +102,28 @@ public class FoocleSpotResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/spotMenu")
     public Response createNewSpotMenu(String content) throws API_Exception {
-        String description, pictures, foodpreferences;
+        String description, pictures, foodPreferences;
         String pickupTimeFrom, pickupTimeTo;
-        long fooclespotID;
+        long foocleSpotID;
 
+        System.out.println("in spotMenu");
         try {
             JsonObject json = JsonParser.parseString(content).getAsJsonObject();
+            foocleSpotID = json.get("foocleSpotID").getAsLong();
             description = json.get("description").getAsString();
             pictures = json.get("pictures").getAsString();
-            foodpreferences = json.get("foodpreferences").getAsString();
+            foodPreferences = json.get("foodPreferences").getAsString();
 
             pickupTimeFrom = json.get("pickupTimeFrom").getAsString();
             pickupTimeTo = json.get("pickupTimeTo").getAsString();
-            fooclespotID = json.get("fooclespotID").getAsLong();
         } catch (Exception e) {
             throw new API_Exception("Malformed JSON Supplied",400,e);
         }
 
         try {
-            SpotMenuDTO business = SPOT_FACADE.createSpotMenu(description, pictures, foodpreferences, LocalDateTime.parse(pickupTimeFrom), LocalDateTime.parse(pickupTimeTo), fooclespotID);
+            SpotMenuDTO business = SPOT_FACADE.createSpotMenu(description, pictures, foodPreferences, LocalDateTime.parse(pickupTimeFrom), LocalDateTime.parse(pickupTimeTo), foocleSpotID);
+
+            System.out.println("end of spotMenu, before response.ok");
             return Response.ok(GSON.toJson(business)).build();
 
         } catch (Exception ex) {
@@ -133,6 +137,15 @@ public class FoocleSpotResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllMenusForSpot(@PathParam("id") long id) {
         List<SpotMenuDTO> list = SPOT_FACADE.getAllMenusForSpot(id);
+        return Response.ok().entity(GSON.toJson(list)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
+    }
+
+    @GET
+    @Path("/{id}/scoutRequests")
+    @PermitAll
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllRequestsForSpot(@PathParam("id") long id) {
+        List<ScoutRequestDTO> list = SPOT_FACADE.getAllRequestsForSpot(id);
         return Response.ok().entity(GSON.toJson(list)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
     }
 }

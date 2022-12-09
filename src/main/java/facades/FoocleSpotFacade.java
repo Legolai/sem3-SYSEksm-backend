@@ -2,6 +2,7 @@ package facades;
 
 import dtos.FoocleSpotAvailabeDTO;
 import dtos.FoocleSpotDTO;
+import dtos.ScoutRequestDTO;
 import dtos.SpotMenuDTO;
 import entities.*;
 
@@ -97,6 +98,16 @@ public class FoocleSpotFacade {
         });
 
         return SpotMenuDTO.listToDTOs(spotMenuList);
+    }
+
+    public List<ScoutRequestDTO> getAllRequestsForSpot(long id) {
+        List<ScoutRequest> scoutRequestList = executeWithClose(em -> {
+            TypedQuery<ScoutRequest> query = em.createQuery("SELECT s FROM ScoutRequest s WHERE s.spotmenu.fooclespot.id = :id ORDER BY s.createdAt", ScoutRequest.class);
+            query.setParameter("id", id);
+            return query.getResultList();
+        });
+
+        return ScoutRequestDTO.listToDTOs(scoutRequestList);
     }
 
 
