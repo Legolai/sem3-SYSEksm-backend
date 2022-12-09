@@ -100,7 +100,13 @@ public class FoocleBusinessFacade {
         return new SpotMenuDTO(spotMenu);
     }
 
-
+    public long getAccountId(long id) {
+        return executeWithClose(em -> {
+            TypedQuery<Long> query = em.createQuery("SELECT b.account.id FROM BusinessAccount b WHERE b.id = :id", Long.class);
+            query.setParameter("id", id);
+            return query.getSingleResult();
+        });
+    }
 
     private <R> R executeWithClose(Function<EntityManager, R> action) {
         EntityManager em = emf.createEntityManager();

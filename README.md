@@ -1,72 +1,242 @@
-# Sem3-CA2-backend-template
+# Sem3-SYSEksm-backend
 
-### Getting Started
+## Getting Started
 
 This document explains how to use this code (build, test and deploy), locally with maven, and remotely with maven controlled by Github actions
  - [How to use](https://docs.google.com/document/d/1rymrRWF3VVR7ujo3k3sSGD_27q73meGeiMYtmUtYt6c/edit?usp=sharing)
 
 
-### Endpoints
+## Endpoints
 
-#### Get anonymous greeting
+### Create a new FoocleBusiness with an admin account
 
-```http
-  GET /api/info
-```
-
-| Parameter  | Type     | Description              |
-|:-----------| :------- | :----------------------- |
-
-#### Get count of users
+Returns Ok `200` if everything went well.
 
 ```http
-  GET /api/info/all
+  POST /api/business
 ```
+| Header parameter | Type     | Description                                    |
+|:-----------------|:---------|:-----------------------------------------------|
+| `Content-Type`   | `string` | **Required**. Has to be ```application/json``` |
+| `Accept`         | `string` | **Required**. Has to be ```application/json``` |
 
-| Parameter  | Type     | Description              |
-|:-----------| :------- | :----------------------- |
+| Parameter              | Type     | Description     |
+|:-----------------------|:---------|:----------------|
+| `cvr`                  | `String` | **Required**.   |
+| `name`                 | `String` | **Required**.   |
+| `description`          | `String` | **Required**.   |
+| `businessEmail`        | `String` | **Required**.   |
+| `businessPhoneNumber`  | `String` | **Required**.   |
+| `address`              | `String` | **Required**.   |
+| `city`                 | `String` | **Required**.   |
+| `zipCode`              | `String` | **Required**.   |
+| `country`              | `String` | **Required**.   |
+| `firstname`            | `String` | **Required**.   |
+| `lastname`             | `String` | **Required**.   |
+| `businessAccountEmail` | `String` | **Required**.   |
+| `password`             | `String` | **Required**.   |
+| `phoneNumber`          | `String` | **Required**.   |
 
-#### Get greeting for a client with _user_ roles
+### Create FoocleSpot
+
+To create FoocleSpot you need to be logged in with a FoocleBusiness admin Account.  
 
 ```http
-  GET /api/info/user
+  POST /api/spot
 ```
+| Header parameter | Type     | Description                                    |
+|:-----------------|:---------|:-----------------------------------------------|
+| `Accept`         | `string` | **Required**. Has to be ```application/json``` |
+| `x-access-token` | `string` | **Required**. Token received from log in       |
 
-| Header parameter | Type   | Description   |
-|:-----------------|:-------|:--------------|
-| x-access-token   | string | **Required**  |
+| Parameter           | Type     | Description   |
+|:--------------------|:---------|:--------------|
+| `businessAccountID` | `Number` | **Required**. |
+| `address`           | `String` | **Required**. |
+| `city`              | `String` | **Required**. |
+| `zipCode`           | `String` | **Required**. |
+| `country`           | `String` | **Required**. |
 
-#### Get greeting for a client with _admin_ roles
+### Create a new FoocleScout account
+
+Returns Ok `200` if everything went well.
+
+``http
+POST /api/scout
+``
+
+| Header parameter | Type     | Description                                    |
+|:-----------------|:---------|:-----------------------------------------------|
+| `Content-Type`   | `string` | **Required**. Has to be ```application/json``` |
+| `Accept`         | `string` | **Required**. Has to be ```application/json``` |
+
+
+| Parameter     | Type     | Description   |
+|:--------------|:---------|:--------------|
+| `firstname`   | `String` | **Required**. |
+| `lastname`    | `String` | **Required**. |
+| `Email`       | `String` | **Required**. |
+| `password`    | `String` | **Required**. |
+| `phoneNumber` | `String` | **Required**. |
+
+
+
+
+### Get foocleSpots
 
 ```http
-  GET /api/info/admin
+  GET /api/spot
+```
+| Header parameter | Type     | Description                                    |
+|:-----------------|:---------|:-----------------------------------------------|
+| `Accept`         | `string` | **Required**. Has to be ```application/json``` |
+| `x-access-token` | `string` | **Required**. Token received from log in       |
+
+#### Example Response
+
+```json
+[
+  {
+    "id": 1,
+    "contact_id": 1,
+    "email": "example@email.com",
+    "phoneNumber": "12345678",
+    "firstname": "example",
+    "lastname": "exampleson",
+    "cvr": "1",
+    "businessName": "Example Business",
+    "location": {
+      "id": 5,
+      "address": "42 ExampleStreet",
+      "city": "ExampleCity",
+      "zipCode": "9999",
+      "country": "ExampleCountry",
+      "longitude": "12.519298",
+      "latitude": "55.754429"
+    }
+  }
+]
 ```
 
-| Header parameter | Type   | Description   |
-|:-----------------|:-------|:--------------|
-| x-access-token   | string | **Required**  |
 
-#### Get random cat picture and the current weather report of CPH
+### Get SpotMenus for foocleSpot 
 
 ```http
-  GET /api/weatherNcat
+  GET /api/spot/{id}/menu
+```
+Replace url parameter `{id}` with an id for a FoocleSpot.
+
+| Header parameter | Type     | Description                                    |
+|:-----------------|:---------|:-----------------------------------------------|
+| `Accept`         | `string` | **Required**. Has to be ```application/json``` |
+| `x-access-token` | `string` | **Required**. Token received from log in       |
+
+#### Example Response
+
+```json
+[
+  {
+    "id":  1,
+    "description":  "The food is really tasty",
+    "pictures":  "URL",
+    "foodPreferences":  "vegan",
+    "pickupTimeFrom": "2022-10-06T11:50:00",
+    "pickupTimeTo":  "2022-10-06T12:50:00",
+    "foocleSpotID": 1 
+  },
+  {
+    "id":  2,
+    "description":  "The food is super tasty",
+    "pictures":  "URL",
+    "foodPreferences":  "vegan",
+    "pickupTimeFrom": "2022-10-07T11:50:00",
+    "pickupTimeTo":  "2022-10-07T12:50:00",
+    "foocleSpotID": 1
+  }
+]
 ```
 
-| Parameter | Type   | Description   |
-|:----------|:-------|:--------------|
 
-#### Login
+### Create SpotMenu for foocleSpot
 
 ```http
-  POST /api/login
+  POST /api/spot/{id}/menu
+```
+Replace url parameter `{id}` with an id for a FoocleSpot.
+
+| Header parameter | Type     | Description                                    |
+|:-----------------|:---------|:-----------------------------------------------|
+| `Accept`         | `string` | **Required**. Has to be ```application/json``` |
+| `x-access-token` | `string` | **Required**. Token received from log in       |
+
+
+
+
+
+#### Example Response
+
+```json
+{
+  "id":  1,
+  "description":  "The food is really tasty",
+  "pictures":  "URL",
+  "foodPreferences":  "vegan",
+  "pickupTimeFrom": "2022-10-06T11:50:00",
+  "pickupTimeTo":  "2022-10-06T12:50:00",
+  "foocleSpotID": 1 
+}
 ```
 
-| Parameter  | Type     | Description              |
-|:-----------| :------- | :----------------------- |
-| `username` | `string` | **Required** |
-| `password` | `string` | **Required** |
+### Login FoocleScout account
 
-#### Revalidate JWT
+```http
+  POST /api/login/scout
+```
+| Header parameter | Type     | Description                                    |
+|:-----------------|:---------|:-----------------------------------------------|
+| `Content-Type`   | `string` | **Required**. Has to be ```application/json``` |
+| `Accept`         | `string` | **Required**. Has to be ```application/json``` |
+
+| Parameter  | Type     | Description    |
+|:-----------| :------- |:---------------|
+| `username` | `string` | **Required**   |
+| `password` | `string` | **Required**   |
+
+#### Example Response
+
+```json
+{
+  "email": "example@email.com",
+  "token": "JWT_TOKEN_HERE"
+}
+```
+
+### Login FoocleBusiness account
+
+```http
+  POST /api/login/business
+```
+| Header parameter | Type     | Description                                    |
+|:-----------------|:---------|:-----------------------------------------------|
+| `Content-Type`   | `string` | **Required**. Has to be ```application/json``` |
+| `Accept`         | `string` | **Required**. Has to be ```application/json``` |
+
+| Parameter  | Type     | Description    |
+|:-----------| :------- |:---------------|
+| `username` | `string` | **Required**   |
+| `password` | `string` | **Required**   |
+
+#### Example Response
+
+```json
+{
+  "email": "example@email.com",
+  "token": "JWT_TOKEN_HERE"
+}
+```
+
+### Validate JWT
+Returns status code `200` `OK` if the token is valid.
 
 ```http
   HEAD /api/login/validate
@@ -76,7 +246,7 @@ This document explains how to use this code (build, test and deploy), locally wi
 | x-access-token   | string | **Required**  |
 
 
-### JPA snippets
+## JPA snippets
 
 ### Setup in Intellij
 - open view->too windows->persistence
@@ -100,7 +270,7 @@ This document explains how to use this code (build, test and deploy), locally wi
   - Verify that the generated script looks right -> click continue
   - click close and open the database to see the new tables, that was just created.
 
-### create entities from database in Intellij (Persistence mappings)
+### Create entities from database in Intellij (Persistence mappings)
 - From inside the Persistence window:
 - Right-click a persistence unit, point to Generate Persistence Mapping and select By Database Schema.
 - Select the 
