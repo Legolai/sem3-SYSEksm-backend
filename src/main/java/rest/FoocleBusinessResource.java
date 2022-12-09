@@ -47,8 +47,8 @@ public class FoocleBusinessResource {
             JsonObject json = JsonParser.parseString(content).getAsJsonObject();
             cvr = json.get("cvr").getAsString();
             name = json.get("name").getAsString();
-            businessEmail = json.get("businessEmail").getAsString();
             description = json.get("description").getAsString();
+            businessEmail = json.get("businessEmail").getAsString();
             businessPhoneNumber = json.get("businessPhone").getAsString();
 
             address = json.get("address").getAsString();

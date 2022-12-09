@@ -3,6 +3,7 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.FoocleSpotAvailabeDTO;
+import dtos.SpotMenuDTO;
 import facades.FoocleScoutFacade;
 import facades.FoocleSpotFacade;
 import utils.EMF_Creator;
@@ -12,6 +13,7 @@ import javax.annotation.security.PermitAll;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -30,6 +32,15 @@ public class FoocleSpotResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
         List<FoocleSpotAvailabeDTO> list = SPOT_FACADE.getAllFoocleSpots();
+        return Response.ok().entity(GSON.toJson(list)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
+    }
+
+    @GET
+    @Path("/{id}/menu")
+    @PermitAll
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllMenusForSpot(@PathParam("id") long id) {
+        List<SpotMenuDTO> list = SPOT_FACADE.getAllMenusForSpot(id);
         return Response.ok().entity(GSON.toJson(list)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
     }
 }

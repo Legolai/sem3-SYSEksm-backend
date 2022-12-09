@@ -39,6 +39,17 @@ public class FoocleSpotFacade {
         return FoocleSpotAvailabeDTO.listToDTOs(foocleSpotList);
     }
 
+    public List<SpotMenuDTO> getAllMenusForSpot(long id) {
+        List<SpotMenu> spotMenuList = executeWithClose(em -> {
+            TypedQuery<SpotMenu> query = em.createQuery("SELECT m FROM SpotMenu m WHERE m.fooclespots.id = :id", SpotMenu.class);
+            query.setParameter("id", id);
+            return query.getResultList();
+        });
+
+        return SpotMenuDTO.listToDTOs(spotMenuList);
+    }
+
+
     public FoocleSpotDTO createFoocleSpot(long businessAccountID, String cvr, String address, String city, String zipCode, String country) {
 
         BusinessAccount bAccount = executeWithClose(em -> em.find(BusinessAccount.class, businessAccountID));

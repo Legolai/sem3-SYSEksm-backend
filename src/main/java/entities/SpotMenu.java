@@ -37,16 +37,16 @@ public class SpotMenu {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "fooclespots_ID", nullable = false)
-    private FoocleSpot fooclespots;
+    private FoocleSpot fooclespot;
 
     public SpotMenu() {}
-    public SpotMenu(String description, String pictures, String foodPrefences, LocalDateTime pickupTimeFrom, LocalDateTime pickupTimeTo, FoocleSpot fooclespots) {
+    public SpotMenu(String description, String pictures, String foodPrefences, LocalDateTime pickupTimeFrom, LocalDateTime pickupTimeTo, FoocleSpot fooclespot) {
         this.description = description;
         this.pictures = pictures;
         this.foodPrefences = foodPrefences;
         this.pickupTimeFrom = pickupTimeFrom;
         this.pickupTimeTo = pickupTimeTo;
-        this.fooclespots = fooclespots;
+        this.fooclespot = fooclespot;
     }
 
     @PrePersist
@@ -112,11 +112,11 @@ public class SpotMenu {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-    public FoocleSpot getFooclespots() {
-        return fooclespots;
+    public FoocleSpot getFooclespot() {
+        return fooclespot;
     }
-    public void setFooclespots(FoocleSpot fooclespots) {
-        this.fooclespots = fooclespots;
+    public void setFooclespot(FoocleSpot fooclespot) {
+        this.fooclespot = fooclespot;
     }
 
 }

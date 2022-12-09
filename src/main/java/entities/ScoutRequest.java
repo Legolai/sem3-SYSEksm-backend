@@ -2,6 +2,7 @@ package entities;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ScoutRequests")
@@ -25,13 +26,42 @@ public class ScoutRequest {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "fooclescouts_ID", nullable = false)
-    private FoocleScout fooclescouts;
+    private FoocleScout fooclescout;
 
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
+
+    public ScoutRequest() {
+
+    }
+
+    @PrePersist
+    public void onCreate() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        int nano = currentTime.getNano();
+        this.createdAt = currentTime.minusNanos(nano);
+        this.updatedAt = createdAt;
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        int nano = currentTime.getNano();
+        this.updatedAt = currentTime.minusNanos(nano);
+    }
+
+    public ScoutRequest() {
+    }
+
+    public ScoutRequest(String message, String status, SpotMenu spotmenu, FoocleScout fooclescout) {
+        this.message = message;
+        this.status = status;
+        this.spotmenu = spotmenu;
+        this.fooclescout = fooclescout;
+    }
 
     public Long getId() {
         return id;
@@ -65,27 +95,27 @@ public class ScoutRequest {
         this.spotmenu = spotmenu;
     }
 
-    public FoocleScout getFooclescouts() {
-        return fooclescouts;
+    public FoocleScout getFooclescout() {
+        return fooclescout;
     }
 
-    public void setFooclescouts(FoocleScout fooclescouts) {
-        this.fooclescouts = fooclescouts;
+    public void setFooclescout(FoocleScout fooclescout) {
+        this.fooclescout = fooclescout;
     }
 
-    public Instant getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Instant getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
