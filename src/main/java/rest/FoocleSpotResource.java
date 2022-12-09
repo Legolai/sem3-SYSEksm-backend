@@ -79,23 +79,14 @@ public class FoocleSpotResource {
         }
         throw new API_Exception("Failed to create a new FoocleSpot!");
     }
-    @POST
-//    @RolesAllowed(Permission.Types.BUSINESSADMIN)
+    @GET
+    @RolesAllowed({Permission.Types.BUSINESSADMIN, Permission.Types.BUSINESSACCOUNT})
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/getFoocleSpot")
-    public Response getAllFoocleSpotsForCVR(String content) throws API_Exception {
-        System.out.println("in getAll");
-        long businessAccountID;
+    @Path("/{id}/getFoocleSpot")
+    public Response getAllFoocleSpotsForCVR(@PathParam("id") long id) throws API_Exception {
         try {
-            JsonObject json = JsonParser.parseString(content).getAsJsonObject();
-            businessAccountID = json.get("businessAccountID").getAsLong();
-        } catch (Exception e) {
-            throw new API_Exception("Malformed JSON Supplied"+e.getMessage(),400,e);
-        }
-        try {
-            System.out.println("in try");
-            List<FoocleSpotAvailabeDTO> spots = SPOT_FACADE.getFoocleSpotsForCVR(businessAccountID);
+            List<FoocleSpotAvailabeDTO> spots = SPOT_FACADE.getFoocleSpotsForCVR(id);
             return Response.ok().entity(GSON.toJson(spots)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
         } catch (Exception ex) {
             Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);

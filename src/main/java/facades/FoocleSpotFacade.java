@@ -68,7 +68,6 @@ public class FoocleSpotFacade {
         return new FoocleSpotDTO(spot);
     }
     public List<FoocleSpotAvailabeDTO> getFoocleSpotsForCVR(long businessAccountID) {
-        System.out.println("before executewith");
         List<FoocleSpot> spots =  executeWithClose(em -> {
             TypedQuery<BusinessAccount> query = em.createQuery("SELECT f FROM BusinessAccount f WHERE f.id = :id", BusinessAccount.class);
             query.setParameter("id", businessAccountID);
@@ -76,7 +75,6 @@ public class FoocleSpotFacade {
             query2.setParameter("cvr", query.getResultList().get(0).getCvr().getId());
             return query2.getResultList();
         });
-        System.out.println("after executewith");
         return FoocleSpotAvailabeDTO.listToDTOs(spots);
     }
 
@@ -93,7 +91,7 @@ public class FoocleSpotFacade {
     }
     public List<SpotMenuDTO> getAllMenusForSpot(long id) {
         List<SpotMenu> spotMenuList = executeWithClose(em -> {
-            TypedQuery<SpotMenu> query = em.createQuery("SELECT m FROM SpotMenu m WHERE m.fooclespots.id = :id", SpotMenu.class);
+            TypedQuery<SpotMenu> query = em.createQuery("SELECT m FROM SpotMenu m WHERE m.fooclespot.id = :id", SpotMenu.class);
             query.setParameter("id", id);
             return query.getResultList();
         });
