@@ -49,6 +49,9 @@ public class ScoutRequest {
         this.updatedAt = currentTime.minusNanos(nano);
     }
 
+    public ScoutRequest() {
+    }
+
     public ScoutRequest(String message, String status, SpotMenu spotmenu, FoocleScout fooclescout) {
         this.message = message;
         this.status = status;
