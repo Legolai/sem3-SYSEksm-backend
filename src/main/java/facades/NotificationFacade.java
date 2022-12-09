@@ -1,12 +1,11 @@
 package facades;
 
 import dtos.NotificationDTO;
+import entities.Account;
 import entities.Notification;
+import entities.StatusType;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -34,6 +33,46 @@ public class NotificationFacade {
             return query.getResultList();
         });
         return NotificationDTO.listToDTOs(notifications);
+    }
+
+    public List<NotificationDTO> getNewNotificationsForAccount(Long id) {
+        List<Notification> notifications = executeWithClose(em -> {
+            TypedQuery<Notification> query = em.createQuery("SELECT n FROM Notification n WHERE n.account.id = :id AND n.status = :status  ORDER BY n.createdAt", Notification.class);
+            query.setParameter("id", id);
+            query.setParameter("status", StatusType.NEW);
+            return query.getResultList();
+        });
+        return NotificationDTO.listToDTOs(notifications);
+    }
+
+    public NotificationDTO createNotification(long accountId, String message, String instructions) {
+        Account account = executeWithClose((em) -> em.find(Account.class, accountId));
+        Notification notification = new Notification();
+        notification.setMessage(message);
+        notification.setInstructions(instructions);
+        notification.setAccount(account);
+        notification.setStatus(StatusType.NEW);
+        executeInsideTransaction((em) -> {
+            em.persist(notification);
+        });
+        return new NotificationDTO(notification);
+    }
+
+    public void updateNotificationStatus(Long id, StatusType statusType){
+        List<Notification> notifications = executeWithClose((em) -> {
+            TypedQuery<Notification> query = em.createQuery("SELECT n FROM Notification n WHERE n.id = :id", Notification.class);
+            query.setParameter("id", id);
+            return query.getResultList();
+        });
+
+        if(notifications.isEmpty()) throw new EntityNotFoundException("Could not find the notification!");
+
+        Notification notification = notifications.get(0);
+        notification.setStatus(statusType);
+
+        executeInsideTransaction((em) -> {
+            em.merge(notification);
+        });
     }
 
     private <R> R executeWithClose(Function<EntityManager, R> action) {

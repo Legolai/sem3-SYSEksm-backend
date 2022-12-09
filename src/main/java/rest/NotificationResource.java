@@ -6,6 +6,7 @@ import com.nimbusds.jwt.SignedJWT;
 import dtos.NotificationDTO;
 import entities.Account;
 import entities.Notification;
+import entities.StatusType;
 import facades.FoocleBusinessFacade;
 import facades.FoocleScoutFacade;
 import facades.FoocleSpotFacade;
@@ -36,14 +37,37 @@ public class NotificationResource {
     @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
     public Response get(@HeaderParam("x-access-token") String token) throws ParseException {
+        long accountId = getAcountId(token);
+        List<NotificationDTO> list = NOTIFICATION_FACADE.getNotificationsForAccount(accountId);
+        return Response.ok().entity(list).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
+    }
+
+    @GET
+    @Path("new")
+    @PermitAll
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getNew(@HeaderParam("x-access-token") String token) throws ParseException {
+        long accountId = getAcountId(token);
+        List<NotificationDTO> list = NOTIFICATION_FACADE.getNewNotificationsForAccount(accountId);
+        return Response.ok().entity(list).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
+    }
+
+    @PUT
+    @Path("{id}/seen")
+    @PermitAll
+    public Response update( @PathParam("id") long id) {
+        NOTIFICATION_FACADE.updateNotificationStatus(id, StatusType.SEEN);
+        return Response.ok().build();
+    }
+
+
+    private long getAcountId(String token) throws ParseException {
         SignedJWT signedJWT = SignedJWT.parse(token);
         String id = signedJWT.getJWTClaimsSet().getClaim("ID").toString();
         Permission permission = Permission.valueOf(signedJWT.getJWTClaimsSet().getClaim("pms").toString());
         long accountId;
         if (permission == Permission.FOOCLESCOUT) accountId = SCOUT_FACADE.getAccountId(Long.parseLong(id));
         else accountId = BUSINESS_FACADE.getAccountId(Long.parseLong(id));
-
-        List<NotificationDTO> list = NOTIFICATION_FACADE.getNotificationsForAccount(accountId);
-        return Response.ok().entity(list).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
+        return accountId;
     }
 }
