@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ScoutRequestDTO {
+public class ScoutRequestWithMenuInfoDTO {
 
     private Long id;
     private String message;
@@ -17,9 +17,13 @@ public class ScoutRequestDTO {
     private LocalDateTime updatedAt;
 
     private Long spotmenuID;
+    private String description;
+    private LocalDateTime pickupTimeFrom;
+    private LocalDateTime pickupTimeTo;
+
     private Long fooclescoutsID;
 
-    public ScoutRequestDTO(ScoutRequest scoutRequest) {
+    public ScoutRequestWithMenuInfoDTO(ScoutRequest scoutRequest) {
         this.id = scoutRequest.getId();
         this.message = scoutRequest.getMessage();
         this.status = scoutRequest.getStatus();

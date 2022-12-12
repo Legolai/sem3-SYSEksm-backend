@@ -2,8 +2,6 @@ package dtos;
 
 import entities.Location;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
 
 public class LocationDTO {
 
@@ -12,13 +10,17 @@ public class LocationDTO {
     private String city;
     private String zipCode;
     private String country;
+    private String longitude;
+    private String latitude;
 
-    public LocationDTO(Long id, String address, String city, String zipCode, String country) {
+    public LocationDTO(Long id, String address, String city, String zipCode, String country, String longitude, String latitude) {
         this.id = id;
         this.address = address;
         this.city = city;
         this.zipCode = zipCode;
         this.country = country;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
     public LocationDTO(Location location) {
         this.id = location.getId();
@@ -26,6 +28,8 @@ public class LocationDTO {
         this.city = location.getCity();
         this.zipCode = location.getZipCode();
         this.country = location.getCountry();
+        this.longitude = location.getLongitude();
+        this.latitude = location.getLatitude();
     }
 
     public Long getId() {
@@ -43,6 +47,12 @@ public class LocationDTO {
     public String getCountry() {
         return country;
     }
+    public String getLongitude() {
+        return longitude;
+    }
+    public String getLatitude() {
+        return latitude;
+    }
 
     public void setAddress(String address) {
         this.address = address;
@@ -56,9 +66,15 @@ public class LocationDTO {
     public void setCountry(String country) {
         this.country = country;
     }
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
 
     @Override
     public String toString() {
-        return "LocationDTO{" + "id=" + id + ", address='" + address + '\'' + ", city='" + city + '\'' + ", zipCode='" + zipCode + '\'' + ", country='" + country + '\'' + '}';
+        return "LocationDTO{" + "id=" + id + ", address='" + address + '\'' + ", city='" + city + '\'' + ", zipCode='" + zipCode + '\'' + ", country='" + country + '\'' + ", longitude='" + longitude + '\'' + ", latitude='" + latitude + '\'' + '}';
     }
 }

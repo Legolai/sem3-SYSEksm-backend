@@ -41,7 +41,6 @@ public class ScoutRequest {
         this.createdAt = currentTime.minusNanos(nano);
         this.updatedAt = createdAt;
     }
-
     @PreUpdate
     public void onUpdate() {
         LocalDateTime currentTime = LocalDateTime.now();
@@ -51,7 +50,6 @@ public class ScoutRequest {
 
     public ScoutRequest() {
     }
-
     public ScoutRequest(String message, String status, SpotMenu spotmenu, FoocleScout fooclescout) {
         this.message = message;
         this.status = status;

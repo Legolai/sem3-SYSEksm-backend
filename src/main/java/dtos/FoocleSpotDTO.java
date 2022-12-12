@@ -18,6 +18,8 @@ public class FoocleSpotDTO {
     private String city;
     private String zipCode;
     private String country;
+    private String longitude;
+    private String latitude;
 
     public FoocleSpotDTO(Long spotID, long businessAccountID, String cvr, LocalDateTime createdAt, LocalDateTime updatedAt, Long locationId, String address, String city, String zipCode, String country) {
         this.spotID = spotID;
@@ -42,6 +44,8 @@ public class FoocleSpotDTO {
         this.city = foocleSpot.getLocation().getCity();
         this.zipCode = foocleSpot.getLocation().getZipCode();
         this.country = foocleSpot.getLocation().getCountry();
+        this.longitude = foocleSpot.getLocation().getLongitude();
+        this.latitude = foocleSpot.getLocation().getLatitude();
     }
 
     public Long getSpotID() {
@@ -74,6 +78,12 @@ public class FoocleSpotDTO {
     public String getCountry() {
         return country;
     }
+    public String getLongitude() {
+        return longitude;
+    }
+    public String getLatitude() {
+        return latitude;
+    }
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
@@ -95,5 +105,11 @@ public class FoocleSpotDTO {
     }
     public void setCountry(String country) {
         this.country = country;
+    }
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 }

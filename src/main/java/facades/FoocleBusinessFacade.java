@@ -6,6 +6,7 @@ import security.errorhandling.AuthenticationException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -59,45 +60,23 @@ public class FoocleBusinessFacade {
         return new FoocleBusinessDTO(foocleBusiness);
     }
 
-    public FoocleSpotDTO createFoocleSpot(long businessAccountID, String address, String city, String zipCode, String country) {
-        Location location = new Location(address, city, zipCode, country);
-
-        FoocleSpot spot =  executeWithClose(em -> {
-            TypedQuery<BusinessAccount> query = em.createQuery("SELECT f FROM BusinessAccount f WHERE f.id = :id", BusinessAccount.class);
-            query.setParameter("id", businessAccountID);
-            TypedQuery<FoocleBusiness> query2 = em.createQuery("SELECT f FROM FoocleBusiness f WHERE f.id = :cvr", FoocleBusiness.class);
-            query2.setParameter("cvr", query.getResultList().get(0).getCvr().getId());
-            return new FoocleSpot(query.getResultList().get(0), query2.getResultList().get(0), location);
+    public List<ScoutRequestDTO> getAllRequests(long id) {
+        List<ScoutRequest> requests = executeWithClose(em -> {
+            BusinessAccount ba = em.find(BusinessAccount.class, id);
+            TypedQuery<ScoutRequest> query2 = em.createQuery("SELECT s FROM ScoutRequest s WHERE s.spotmenu.fooclespot.cvr.id = :cvr ORDER BY s.spotmenu.pickupTimeTo", ScoutRequest.class);
+            query2.setParameter("cvr", ba.getCvr().getId());
+            return query2.getResultList();
         });
-        List<Location> responseLocation = executeWithClose(em -> {
-            TypedQuery<Location> query = em.createQuery("SELECT l FROM Location l " +
-                    "WHERE l.address = :address AND l.city = :city AND l.country = :country", Location.class);
-            query.setParameter("address", address);
-            query.setParameter("city", city);
-            query.setParameter("country", country);
-            return query.getResultList();
-        });
-
-        executeInsideTransaction(em -> {
-            if (responseLocation.isEmpty()) {
-                em.persist(location);
-            } else {
-                spot.setLocation(responseLocation.get(0));
-            }
-            em.persist(spot);
-        });
-        return new FoocleSpotDTO(spot);
+        return ScoutRequestDTO.listToDTOs(requests);
     }
 
-    public SpotMenuDTO createSpotMenu(String description, String pictures, String foodPrefences, LocalDateTime pickupTimeFrom, LocalDateTime pickupTimeTo, long fooclespotID) {
-        FoocleSpot foocleSpot = executeWithClose(em -> em.find(FoocleSpot.class, fooclespotID));
-        SpotMenu spotMenu = new SpotMenu(description, pictures, foodPrefences, pickupTimeFrom, pickupTimeTo, foocleSpot);
-
+    public boolean updateRequestStatus(long id, String status) {
         executeInsideTransaction(em -> {
-            em.persist(spotMenu);
+            ScoutRequest request = em.find(ScoutRequest.class, id);
+            request.setStatus(status);
+            em.merge(request);
         });
-
-        return new SpotMenuDTO(spotMenu);
+        return true;
     }
 
     public long getAccountId(long id) {
@@ -112,7 +91,7 @@ public class FoocleBusinessFacade {
         EntityManager em = emf.createEntityManager();
         R result = action.apply(em);
         em.close();
-        System.out.println("closing WithClose transaction");
+//        System.out.println("closing WithClose transaction");
         return result;
     }
     private void executeInsideTransaction(Consumer<EntityManager> action) {
@@ -127,7 +106,7 @@ public class FoocleBusinessFacade {
             e.printStackTrace();
             throw e;
         } finally {
-            System.out.println("closing transaction");
+//            System.out.println("closing transaction");
             em.close();
         }
     }
