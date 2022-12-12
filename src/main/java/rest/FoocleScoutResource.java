@@ -2,20 +2,26 @@ package rest;
 
 import com.google.gson.*;
 import dtos.FoocleScoutDTO;
+import dtos.MadeScoutRequestDto;
 import dtos.ScoutRequestDTO;
 import errorhandling.API_Exception;
 import errorhandling.GenericExceptionMapper;
 import facades.FoocleScoutFacade;
 import facades.ScoutRequestFacade;
+import security.Permission;
 import utils.EMF_Creator;
 import utils.GsonLocalDateTime;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,5 +87,13 @@ public class FoocleScoutResource {
         }
         throw new API_Exception("Failed to create a new FoocleScout account!");
 
+    }
+
+    @GET
+    @Path("{id}/request")
+    @RolesAllowed(Permission.Types.FOOCLESCOUT)
+    public Response getRequests(@PathParam("id") long id){
+        List<MadeScoutRequestDto> requestDTOList = SCOUT_REQUEST_FACADE.getAllForScout(id);
+        return Response.ok().entity(GSON.toJson(requestDTOList)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
     }
 }
