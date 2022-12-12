@@ -39,10 +39,9 @@ public class FoocleSpotFacade {
         });
         return FoocleSpotAvailabeDTO.listToDTOs(foocleSpotList);
     }
-    public FoocleSpotDTO createFoocleSpot(long businessAccountID, String cvr, String address, String city, String zipCode, String country) {
-
+    public FoocleSpotDTO createFoocleSpot(long businessAccountID, String address, String city, String zipCode, String country) {
         BusinessAccount bAccount = executeWithClose(em -> em.find(BusinessAccount.class, businessAccountID));
-        FoocleBusiness foocleBusiness = executeWithClose(em -> em.find(FoocleBusiness.class, cvr));
+        FoocleBusiness foocleBusiness = executeWithClose(em -> em.find(FoocleBusiness.class, bAccount.getCvr().getId()));
 
         Location location = new Location(address, city, zipCode, country);
         FoocleSpot spot = new FoocleSpot(bAccount, foocleBusiness, location);
@@ -58,7 +57,6 @@ public class FoocleSpotFacade {
             }
             em.persist(spot);
         });
-
         return new FoocleSpotDTO(spot);
     }
     public List<FoocleSpotAvailabeDTO> getFoocleSpotsForCVR(long businessAccountID) {

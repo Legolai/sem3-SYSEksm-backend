@@ -9,6 +9,7 @@ import errorhandling.API_Exception;
 import errorhandling.GenericExceptionMapper;
 import facades.FoocleBusinessFacade;
 import facades.FoocleScoutFacade;
+import facades.NotificationFacade;
 import security.Permission;
 import utils.EMF_Creator;
 import utils.GsonLocalDateTime;
@@ -29,6 +30,8 @@ public class FoocleBusinessResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     public static final FoocleBusinessFacade BUSINESS_FACADE = FoocleBusinessFacade.getFoocleBusinessFacade(EMF);
+    public static final FoocleScoutFacade SCOUT_FACADE = FoocleScoutFacade.getFoocleScoutFacade(EMF);
+    public static final NotificationFacade NOTIFICATION_FACADE = NotificationFacade.getInstance(EMF);
     private static final Gson GSON = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTime()).setPrettyPrinting().create();
 
     @POST
@@ -89,12 +92,13 @@ public class FoocleBusinessResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateRequestStatus(String content) throws API_Exception {
-        long id;
+        long id, scoutID;
         String status;
 
         try {
             JsonObject json = JsonParser.parseString(content).getAsJsonObject();
             id = json.get("id").getAsLong();
+            scoutID = json.get("scoutID").getAsLong();
             status = json.get("status").getAsString();
 
         } catch (Exception e) {
@@ -103,6 +107,7 @@ public class FoocleBusinessResource {
 
         try {
             BUSINESS_FACADE.updateRequestStatus(id, status);
+            NOTIFICATION_FACADE.createNotification(SCOUT_FACADE.getAccountId(scoutID), String.format("Request nr. %s have been: %s",id,status), "");
             return Response.ok().build();
 
         } catch (Exception ex) {
