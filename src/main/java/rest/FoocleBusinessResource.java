@@ -73,6 +73,44 @@ public class FoocleBusinessResource {
     }
 
 
+    @GET
+    @Path("/{id}/requests")
+    @RolesAllowed({Permission.Types.BUSINESSACCOUNT, Permission.Types.BUSINESSADMIN})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllRequestsForBusiness(@PathParam("id") long id) {
+        List<ScoutRequestDTO> list = BUSINESS_FACADE.getAllRequests(id);
+        return Response.ok().entity(GSON.toJson(list)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
+    }
+
+    @POST
+    @Path("/request")
+    @RolesAllowed({Permission.Types.BUSINESSACCOUNT, Permission.Types.BUSINESSADMIN})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateRequestStatus(String content) throws API_Exception {
+        long id;
+        String status;
+
+        try {
+            JsonObject json = JsonParser.parseString(content).getAsJsonObject();
+            id = json.get("id").getAsLong();
+            status = json.get("status").getAsString();
+
+        } catch (Exception e) {
+            throw new API_Exception("Malformed JSON Supplied",400,e);
+        }
+
+        try {
+            BUSINESS_FACADE.updateRequestStatus(id, status);
+            return Response.ok().build();
+
+        } catch (Exception ex) {
+            Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        throw new API_Exception("Failed to update ScoutRequest(s)!");
+    }
+
 
 
 }
