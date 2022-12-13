@@ -1,9 +1,9 @@
 package facades;
 
-import dtos.FoocleScoutDTO;
+
+import dtos.MadeScoutRequestDto;
 import dtos.ScoutRequestDTO;
 import entities.*;
-import security.errorhandling.AuthenticationException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -47,6 +47,15 @@ public class ScoutRequestFacade {
         });
 
         return new ScoutRequestDTO(scoutRequest);
+    }
+
+    public  List<MadeScoutRequestDto> getAllForScout(long id) {
+        List<ScoutRequest> list = executeWithClose(em -> {
+            TypedQuery<ScoutRequest> query = em.createQuery("SELECT r FROM ScoutRequest r JOIN SpotMenu m ON m.id = r.spotmenu.id JOIN  FoocleSpot s ON s.id = r.spotmenu.id JOIN FoocleBusiness b ON s.cvr.id = b.id WHERE r.fooclescout.id = :id", ScoutRequest.class);
+            query.setParameter("id", id);
+            return query.getResultList();
+        });
+        return MadeScoutRequestDto.listToDTOs(list);
     }
 
     private <R> R executeWithClose(Function<EntityManager, R> action) {

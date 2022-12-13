@@ -1,6 +1,7 @@
 package entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
@@ -23,9 +24,41 @@ public class Notification {
     @JoinColumn(name = "account_ID", nullable = false)
     private Account account;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "scoutrequests_ID", nullable = false)
-    private ScoutRequest scoutrequests;
+    @NotNull
+    @Lob
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private StatusType status;
+
+    @Lob
+    @Column(name = "instructions")
+    private String instructions;
+
+    public Notification() {
+    }
+
+    @PrePersist
+    public void onCreate() {
+        LocalDateTime time = LocalDateTime.now();
+        this.createdAt = time.minusNanos(time.getNano());
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+
+    public StatusType getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusType status) {
+        this.status = status;
+    }
+
 
     public Long getId() {
         return id;
@@ -59,12 +92,6 @@ public class Notification {
         this.account = account;
     }
 
-    public ScoutRequest getScoutrequests() {
-        return scoutrequests;
-    }
 
-    public void setScoutrequests(ScoutRequest scoutrequests) {
-        this.scoutrequests = scoutrequests;
-    }
 
 }

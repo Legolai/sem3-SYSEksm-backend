@@ -1,9 +1,12 @@
 package dtos;
 
 import entities.ScoutRequest;
+import entities.SpotMenu;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ScoutRequestDTO {
 
@@ -25,4 +28,9 @@ public class ScoutRequestDTO {
         this.createdAt = scoutRequest.getCreatedAt();
         this.updatedAt = scoutRequest.getUpdatedAt();
     }
+
+    public static List<ScoutRequestDTO> listToDTOs(List<ScoutRequest> scoutRequests) {
+        return scoutRequests.stream().map(ScoutRequestDTO::new).collect(Collectors.toList());
+    }
+
 }

@@ -2,15 +2,24 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import dtos.FoocleSpotAvailabeDTO;
+import dtos.FoocleSpotDTO;
+import dtos.ScoutRequestDTO;
 import dtos.SpotMenuDTO;
+import errorhandling.API_Exception;
+import errorhandling.GenericExceptionMapper;
 import facades.FoocleScoutFacade;
 import facades.FoocleSpotFacade;
+import security.Permission;
 import utils.EMF_Creator;
 import utils.GsonLocalDateTime;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
+import javax.ws.rs.*;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -20,6 +29,8 @@ import javax.ws.rs.core.Response;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Path("/spot")
 public class FoocleSpotResource {
@@ -35,12 +46,113 @@ public class FoocleSpotResource {
         return Response.ok().entity(GSON.toJson(list)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
     }
 
+    @POST
+    @RolesAllowed(Permission.Types.BUSINESSADMIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createNewFoocleSpot(String content) throws API_Exception {
+        long businessAccountID;
+        String address, city, zipCode, country;
+
+        try {
+            JsonObject json = JsonParser.parseString(content).getAsJsonObject();
+            businessAccountID = json.get("businessAccountID").getAsLong();
+
+            address = json.get("address").getAsString();
+            if (address.equals("")) { throw new Exception(": Empty Address!"); }
+            city = json.get("city").getAsString();
+            if (city.equals("")) { throw new Exception(": Empty City!"); }
+            zipCode = json.get("zipCode").getAsString();
+            if (zipCode.equals("")) { throw new Exception(": Empty zipCode!"); }
+            country = json.get("country").getAsString();
+            if (country.equals("")) { throw new Exception(": Empty Country!"); }
+        } catch (Exception e) {
+            throw new API_Exception("Malformed JSON Supplied"+e.getMessage(),400,e);
+        }
+
+        try {
+            FoocleSpotDTO spot = SPOT_FACADE.createFoocleSpot(businessAccountID, address, city, zipCode, country);
+            return Response.ok(GSON.toJson(spot)).build();
+
+        } catch (Exception ex) {
+            Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        throw new API_Exception("Failed to create a new FoocleSpot!");
+    }
+    @GET
+    @RolesAllowed({Permission.Types.BUSINESSADMIN, Permission.Types.BUSINESSACCOUNT})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}/getFoocleSpot")
+    public Response getAllFoocleSpotsForCVR(@PathParam("id") long id) throws API_Exception {
+        try {
+            List<FoocleSpotAvailabeDTO> spots = SPOT_FACADE.getFoocleSpotsForCVR(id);
+            return Response.ok().entity(GSON.toJson(spots)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
+        } catch (Exception ex) {
+            Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        throw new API_Exception("Failed to get FoocleSpots!");
+    }
+
+
+    @POST
+    @RolesAllowed({Permission.Types.BUSINESSACCOUNT, Permission.Types.BUSINESSADMIN})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/spotMenu")
+    public Response createNewSpotMenu(String content) throws API_Exception {
+        String description, pictures, foodPreferences;
+        String pickupTimeFrom, pickupTimeTo;
+        long foocleSpotID;
+
+        System.out.println("in spotMenu");
+        try {
+            JsonObject json = JsonParser.parseString(content).getAsJsonObject();
+            foocleSpotID = json.get("foocleSpotID").getAsLong();
+            description = json.get("description").getAsString();
+            pictures = json.get("pictures").getAsString();
+            foodPreferences = json.get("foodPreferences").getAsString();
+
+            pickupTimeFrom = json.get("pickupTimeFrom").getAsString();
+            pickupTimeTo = json.get("pickupTimeTo").getAsString();
+        } catch (Exception e) {
+            throw new API_Exception("Malformed JSON Supplied",400,e);
+        }
+
+        try {
+            SpotMenuDTO business = SPOT_FACADE.createSpotMenu(description, pictures, foodPreferences, LocalDateTime.parse(pickupTimeFrom), LocalDateTime.parse(pickupTimeTo), foocleSpotID);
+
+            System.out.println("end of spotMenu, before response.ok");
+            return Response.ok(GSON.toJson(business)).build();
+
+        } catch (Exception ex) {
+            Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        throw new API_Exception("Failed to create a new FoocleSpot!");
+    }
     @GET
     @Path("/{id}/menu")
     @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllMenusForSpot(@PathParam("id") long id) {
         List<SpotMenuDTO> list = SPOT_FACADE.getAllMenusForSpot(id);
+        return Response.ok().entity(GSON.toJson(list)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
+    }
+    @GET
+    @Path("/{id}/relevantMenu")
+    @PermitAll
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllRelevantMenusForSpot(@PathParam("id") long id) {
+        List<SpotMenuDTO> list = SPOT_FACADE.getAllRelevantMenusForSpot(id);
+        return Response.ok().entity(GSON.toJson(list)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
+    }
+
+    @GET
+    @Path("/{id}/scoutRequests")
+    @PermitAll
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllRequestsForSpot(@PathParam("id") long id) {
+        List<ScoutRequestDTO> list = SPOT_FACADE.getAllRequestsForSpot(id);
         return Response.ok().entity(GSON.toJson(list)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
     }
 }

@@ -70,3 +70,21 @@ Content-Type: application/json
   "firstname": "Mim",
   "lastname": "m"
 }
+
+###4
+POST http://localhost:8080/api/login/business
+Content-Type: application/json
+
+{
+  "email": "thomas@aaa.com",
+  "password": "123"
+}
+
+###5
+GET http://localhost:8080/api/spot/foocleSpot
+Content-Type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aG9tYXNAYWFhLmNvbSIsImZuYW1lIjoiVGhvbWFzIiwibG5hbWUiOiJhYWEiLCJwbXMiOiJCVVNJTkVTU0FETUlOIiwiSUQiOjEsImV4cCI6MTY3MDI0MDQ1OCwiaWF0IjoxNjcwMjM4NjU4LCJlbWFpbCI6InRob21hc0BhYWEuY29tIiwiaXNzdWVyIjoic2VtZXN0ZXJzdGFydGNvZGUtZGF0MyJ9.Ia7dvtDLmO9jIC7npWVWSF4Hi2-1Q33TMFHXjcksdwA
+
+{
+  "businessAccountID": "1"
+}

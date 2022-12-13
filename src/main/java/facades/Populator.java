@@ -17,13 +17,8 @@ import utils.EMF_Creator;
 public class Populator {
     public static void populate(){
         EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
-        Location location = new Location();
-        location.setAddress("2 nybrovej");
-        location.setCity("gentofte");
-        location.setZipCode("2820");
-        location.setCountry("danmark");
-        FoocleSpotFacade foocleSpotFacade = FoocleSpotFacade.getInstance(emf);
-        foocleSpotFacade.createFoocleSpot(1L, "1", location.getAddress(), location.getCity(), location.getZipCode(), location.getCountry());
+        NotificationFacade notificationFacade = NotificationFacade.getInstance(emf);
+        notificationFacade.createNotification(10, "Hey a new request has been made!", "");
 
     }
     
