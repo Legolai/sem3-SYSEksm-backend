@@ -5,10 +5,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dtos.*;
+import entities.SpotMenu;
 import errorhandling.API_Exception;
 import errorhandling.GenericExceptionMapper;
 import facades.FoocleBusinessFacade;
 import facades.FoocleScoutFacade;
+import facades.FoocleSpotFacade;
 import facades.NotificationFacade;
 import security.Permission;
 import utils.EMF_Creator;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 @Path("/business")
 public class FoocleBusinessResource {
 
@@ -32,6 +35,7 @@ public class FoocleBusinessResource {
     public static final FoocleBusinessFacade BUSINESS_FACADE = FoocleBusinessFacade.getFoocleBusinessFacade(EMF);
     public static final FoocleScoutFacade SCOUT_FACADE = FoocleScoutFacade.getFoocleScoutFacade(EMF);
     public static final NotificationFacade NOTIFICATION_FACADE = NotificationFacade.getInstance(EMF);
+    public static final FoocleSpotFacade SPOT_FACADE = FoocleSpotFacade.getInstance(EMF);
     private static final Gson GSON = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTime()).setPrettyPrinting().create();
 
     @POST
@@ -124,6 +128,19 @@ public class FoocleBusinessResource {
         throw new API_Exception("Failed to update ScoutRequest(s)!");
     }
 
-
+    @GET
+    @RolesAllowed({Permission.Types.BUSINESSADMIN, Permission.Types.BUSINESSACCOUNT})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}/spot")
+    public Response getAllFoocleSpotsForCVR(@PathParam("id") long id) throws API_Exception {
+        try {
+            List<FoocleSpotAvailabeDTO> spots = SPOT_FACADE.getFoocleSpotsForCVR(id);
+            return Response.ok().entity(GSON.toJson(spots)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
+        } catch (Exception ex) {
+            Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        throw new API_Exception("Failed to get FoocleSpots!");
+    }
 
 }

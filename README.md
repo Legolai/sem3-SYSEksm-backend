@@ -8,6 +8,8 @@ This document explains how to use this code (build, test and deploy), locally wi
 
 ## Endpoints
 
+
+
 ### Create a new FoocleBusiness with an admin account
 
 Returns Ok `200` if everything went well.
@@ -37,48 +39,50 @@ Returns Ok `200` if everything went well.
 | `password`             | `String` | **Required**.   |
 | `phoneNumber`          | `String` | **Required**.   |
 
-### Create FoocleSpot
-
-To create FoocleSpot you need to be logged in with a FoocleBusiness admin Account.  
+### Get all requests for a business
 
 ```http
-  POST /api/spot
+  POST /api/business/{id}/request
 ```
-| Header parameter | Type     | Description                                    |
-|:-----------------|:---------|:-----------------------------------------------|
-| `Accept`         | `string` | **Required**. Has to be ```application/json``` |
-| `x-access-token` | `string` | **Required**. Token received from log in       |
-
-| Parameter           | Type     | Description   |
-|:--------------------|:---------|:--------------|
-| `businessAccountID` | `Number` | **Required**. |
-| `address`           | `String` | **Required**. |
-| `city`              | `String` | **Required**. |
-| `zipCode`           | `String` | **Required**. |
-| `country`           | `String` | **Required**. |
-
-### Create a new FoocleScout account
-
-Returns Ok `200` if everything went well.
-
-``http
-POST /api/scout
-``
-
 | Header parameter | Type     | Description                                    |
 |:-----------------|:---------|:-----------------------------------------------|
 | `Content-Type`   | `string` | **Required**. Has to be ```application/json``` |
 | `Accept`         | `string` | **Required**. Has to be ```application/json``` |
+| `x-access-token` | `string` | **Required**. Token received from log in       |
 
+#### Example Response
 
-| Parameter     | Type     | Description   |
-|:--------------|:---------|:--------------|
-| `firstname`   | `String` | **Required**. |
-| `lastname`    | `String` | **Required**. |
-| `Email`       | `String` | **Required**. |
-| `password`    | `String` | **Required**. |
-| `phoneNumber` | `String` | **Required**. |
+```json
+[
+  {
+    "id": 1,
+    "message": "I want this",
+    "status": "PENDING",
+    "spotmenuId": 1, 
+    "FooclespotId": 1,
+    "createdAt": "2022-10-06T11:50:00",
+    "updatedAt": "2022-10-06T11:50:00"
+  }
+]
+```
 
+### Update Request Status
+
+Returns Ok `200` if everything went well.
+
+```http
+  POST /api/business/request
+```
+| Header parameter | Type     | Description                                    |
+|:-----------------|:---------|:-----------------------------------------------|
+| `Content-Type`   | `string` | **Required**. Has to be ```application/json``` |
+| `x-access-token` | `string` | **Required**. Token received from log in       |
+
+| Parameter | Type     | Description     |
+|:----------|:---------|:----------------|
+| `id`      | `Number` | **Required**.   |
+| `scoutID` | `Number` | **Required**.   |
+| `status`  | `String` | **Required**.   |
 
 
 
@@ -119,7 +123,49 @@ POST /api/scout
 ```
 
 
-### Get SpotMenus for foocleSpot 
+### Create FoocleSpot
+
+To create FoocleSpot you need to be logged in with a FoocleBusiness admin Account.  
+
+```http
+  POST /api/spot
+```
+| Header parameter | Type     | Description                                    |
+|:-----------------|:---------|:-----------------------------------------------|
+| `Accept`         | `string` | **Required**. Has to be ```application/json``` |
+| `x-access-token` | `string` | **Required**. Token received from log in       |
+
+| Parameter           | Type     | Description   |
+|:--------------------|:---------|:--------------|
+| `businessAccountID` | `Number` | **Required**. |
+| `address`           | `String` | **Required**. |
+| `city`              | `String` | **Required**. |
+| `zipCode`           | `String` | **Required**. |
+| `country`           | `String` | **Required**. |
+
+
+
+### Create request for spotmenu
+
+Returns Ok `200` if everything went well.
+
+```http
+  POST /api/spot
+```
+| Header parameter | Type     | Description                                    |
+|:-----------------|:---------|:-----------------------------------------------|
+| `Accept`         | `string` | **Required**. Has to be ```application/json``` |
+| `x-access-token` | `string` | **Required**. Token received from log in       |
+
+| Parameter       | Type     | Description   |
+|:----------------|:---------|:--------------|
+| `spotmenuId`    | `Number` | **Required**. |
+| `fooclescoutId` | `Number` | **Required**. |
+
+
+
+
+### Get SpotMenus for foocleSpot
 
 ```http
   GET /api/spot/{id}/menu
@@ -156,7 +202,6 @@ Replace url parameter `{id}` with an id for a FoocleSpot.
 ]
 ```
 
-
 ### Create SpotMenu for foocleSpot
 
 ```http
@@ -168,9 +213,6 @@ Replace url parameter `{id}` with an id for a FoocleSpot.
 |:-----------------|:---------|:-----------------------------------------------|
 | `Accept`         | `string` | **Required**. Has to be ```application/json``` |
 | `x-access-token` | `string` | **Required**. Token received from log in       |
-
-
-
 
 
 #### Example Response
@@ -186,6 +228,31 @@ Replace url parameter `{id}` with an id for a FoocleSpot.
   "foocleSpotID": 1 
 }
 ```
+
+### Create a new FoocleScout account
+
+Returns Ok `200` if everything went well.
+
+``http
+POST /api/scout
+``
+
+| Header parameter | Type     | Description                                    |
+|:-----------------|:---------|:-----------------------------------------------|
+| `Content-Type`   | `string` | **Required**. Has to be ```application/json``` |
+| `Accept`         | `string` | **Required**. Has to be ```application/json``` |
+
+
+| Parameter     | Type     | Description   |
+|:--------------|:---------|:--------------|
+| `firstname`   | `String` | **Required**. |
+| `lastname`    | `String` | **Required**. |
+| `Email`       | `String` | **Required**. |
+| `password`    | `String` | **Required**. |
+| `phoneNumber` | `String` | **Required**. |
+
+
+
 
 ### Login FoocleScout account
 

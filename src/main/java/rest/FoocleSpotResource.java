@@ -79,20 +79,6 @@ public class FoocleSpotResource {
         }
         throw new API_Exception("Failed to create a new FoocleSpot!");
     }
-    @GET
-    @RolesAllowed({Permission.Types.BUSINESSADMIN, Permission.Types.BUSINESSACCOUNT})
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{id}/getFoocleSpot")
-    public Response getAllFoocleSpotsForCVR(@PathParam("id") long id) throws API_Exception {
-        try {
-            List<FoocleSpotAvailabeDTO> spots = SPOT_FACADE.getFoocleSpotsForCVR(id);
-            return Response.ok().entity(GSON.toJson(spots)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
-        } catch (Exception ex) {
-            Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        throw new API_Exception("Failed to get FoocleSpots!");
-    }
 
 
     @POST
