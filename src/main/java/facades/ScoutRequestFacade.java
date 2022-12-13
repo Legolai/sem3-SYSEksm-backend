@@ -37,7 +37,9 @@ public class ScoutRequestFacade {
         return instance;
     }
 
-    public ScoutRequestDTO createScoutRequest(String message, String status, long spotmenuId, long fooclescoutId) {
+    public ScoutRequestDTO createScoutRequest(long spotmenuId, long fooclescoutId) {
+        String status = "PENDING";
+        String message = "Hi, i would like to make a request for this menu";
         SpotMenu spotmenu = executeWithClose(em -> em.getReference(SpotMenu.class, spotmenuId));
         FoocleScout foocleScout = executeWithClose(em -> em.getReference(FoocleScout.class, fooclescoutId));
         ScoutRequest scoutRequest = new ScoutRequest(message, status, spotmenu, foocleScout);
