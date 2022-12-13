@@ -42,6 +42,7 @@ public class FoocleBusinessEndpointTest {
     private static EntityManagerFactory emf;
 
     private BusinessAccount businessAccount;
+    private ScoutRequest scoutRequest;
 
     static HttpServer startServer() {
         ResourceConfig rc = ResourceConfig.forApplication(new ApplicationConfig());
@@ -101,7 +102,7 @@ public class FoocleBusinessEndpointTest {
             time = time.minusNanos(time.getNano());
             FoocleSpot foocleSpot = new FoocleSpot(businessAccount, foocleBusiness, location);
             SpotMenu spotMenu = new SpotMenu("Very tasty", "https://s.inyourpocket.com/gallery/reykjavik/2020/02/270772.jpg", "vegan", time, time, foocleSpot);
-            ScoutRequest scoutRequest = new ScoutRequest("I like this food", "PENDING", spotMenu, foocleScout);
+            scoutRequest = new ScoutRequest("I like this food", "PENDING", spotMenu, foocleScout);
 
 
 
@@ -198,8 +199,33 @@ public class FoocleBusinessEndpointTest {
             .accept(ContentType.JSON)
             .header("x-access-token", securityToken)
             .when()
-            .get("/business/"+businessAccount.getId()+"/requests").then()
+            .get("/business/"+businessAccount.getId()+"/request").then()
             .statusCode(200).body("", hasSize(1));
+
+    }
+
+    @Test
+    public void getRelevantRequest() {
+        loginBusiness("test@email.com","test123");
+        given()
+                .accept(ContentType.JSON)
+                .header("x-access-token", securityToken)
+                .when()
+                .get("/business/"+businessAccount.getId()+"/relevantRequest").then()
+                .statusCode(200).body("", hasSize(0));
+    }
+
+    @Test
+    public void updateRequestState() {
+        loginBusiness("test@email.com","test123");
+        String json = String.format("{id: %d, scoutID: %d, status: \"%s\"}", scoutRequest.getId(), scoutRequest.getFooclescout().getId(), "ACCPETED");
+        given().body(json)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .header("x-access-token", securityToken)
+                .when()
+                .put("/business/request").then()
+                .statusCode(200);
 
     }
 }

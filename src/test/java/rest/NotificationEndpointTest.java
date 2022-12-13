@@ -2,7 +2,10 @@ package rest;
 
 import entities.Account;
 import entities.FoocleScout;
+import entities.Notification;
+import entities.StatusType;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -19,6 +22,8 @@ import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 
 public class NotificationEndpointTest {
     private static final int SERVER_PORT = 7777;
@@ -27,6 +32,9 @@ public class NotificationEndpointTest {
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
     private static EntityManagerFactory emf;
+
+    private Notification notification;
+    private Account account;
 
     static HttpServer startServer() {
         ResourceConfig rc = ResourceConfig.forApplication(new ApplicationConfig());
@@ -73,10 +81,17 @@ public class NotificationEndpointTest {
             em.createQuery("delete from Account").executeUpdate();
             em.createQuery("delete from Location").executeUpdate();
 
-            Account account = new Account("test@email.com", "+45 99 99 99 99", "test", "test", "test123");
+            account = new Account("test1@email.com", "+45 98 99 99 99", "test1", "testsen", "test1234");
             FoocleScout foocleScout = new FoocleScout(account);
+            notification = new Notification();
+            notification.setAccount(account);
+            notification.setMessage("Hey there I am new");
+            notification.setStatus(StatusType.NEW);
+            notification.setInstructions("");
+
             em.persist(account);
             em.persist(foocleScout);
+            em.persist(notification);
             //System.out.println("Saved test data to database");
             em.getTransaction().commit();
         } finally {
@@ -107,5 +122,41 @@ public class NotificationEndpointTest {
     @Test
     public void serverIsRunning() {
         given().when().get("/info").then().statusCode(200);
+    }
+
+
+    @Test
+    public void getAll() {
+        loginScout("test1@email.com", "test1234");
+        given()
+                .accept(ContentType.JSON)
+                .header("x-access-token", securityToken)
+                .when()
+                .get("/notification").then()
+                .statusCode(200)
+                .body("",hasSize(1));
+    }
+
+    @Test
+    public void getAllNew() {
+        loginScout("test1@email.com", "test1234");
+        given()
+                .accept(ContentType.JSON)
+                .header("x-access-token", securityToken)
+                .when()
+                .get("/notification/new").then()
+                .statusCode(200)
+                .body("", hasSize(1));
+    }
+
+    @Test
+    public void updateToSeen() {
+        loginScout("test1@email.com", "test1234");
+        given()
+                .accept(ContentType.JSON)
+                .header("x-access-token", securityToken)
+                .when()
+                .put("/notification/"+notification.getId()+"/seen").then()
+                .statusCode(200);
     }
 }
