@@ -50,7 +50,6 @@ public class FoocleSpotResource {
     @RolesAllowed(Permission.Types.BUSINESSADMIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/foocleSpot")
     public Response createNewFoocleSpot(String content) throws API_Exception {
         long businessAccountID;
         String address, city, zipCode, country;
@@ -137,6 +136,14 @@ public class FoocleSpotResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllMenusForSpot(@PathParam("id") long id) {
         List<SpotMenuDTO> list = SPOT_FACADE.getAllMenusForSpot(id);
+        return Response.ok().entity(GSON.toJson(list)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
+    }
+    @GET
+    @Path("/{id}/relevantMenu")
+    @PermitAll
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllRelevantMenusForSpot(@PathParam("id") long id) {
+        List<SpotMenuDTO> list = SPOT_FACADE.getAllRelevantMenusForSpot(id);
         return Response.ok().entity(GSON.toJson(list)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
     }
 
