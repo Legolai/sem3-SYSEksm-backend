@@ -82,7 +82,7 @@ public class FoocleBusinessResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRequestsForBusiness(@PathParam("id") long id) {
-        List<ScoutRequestDTO> list = BUSINESS_FACADE.getAllRequests(id);
+        List<ScoutRequestMenuDTO> list = BUSINESS_FACADE.getAllRequests(id);
         return Response.ok().entity(GSON.toJson(list)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
     }
 
