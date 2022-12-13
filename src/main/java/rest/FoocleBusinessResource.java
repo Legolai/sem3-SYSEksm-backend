@@ -77,16 +77,24 @@ public class FoocleBusinessResource {
 
 
     @GET
-    @Path("/{id}/requests")
+    @Path("/{id}/request")
     @RolesAllowed({Permission.Types.BUSINESSACCOUNT, Permission.Types.BUSINESSADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRequestsForBusiness(@PathParam("id") long id) {
-        List<ScoutRequestDTO> list = BUSINESS_FACADE.getAllRequests(id);
+        List<ScoutRequestMenuDTO> list = BUSINESS_FACADE.getAllRequests(id);
         return Response.ok().entity(GSON.toJson(list)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
     }
-
-    @POST
+    @GET
+    @Path("/{id}/relevantRequest")
+    @RolesAllowed({Permission.Types.BUSINESSACCOUNT, Permission.Types.BUSINESSADMIN})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllRelevantRequestsForBusiness(@PathParam("id") long id) {
+        List<ScoutRequestMenuDTO> list = BUSINESS_FACADE.getAllRelevantRequests(id);
+        return Response.ok().entity(GSON.toJson(list)).header(MediaType.CHARSET_PARAMETER, StandardCharsets.UTF_8.name()).build();
+    }
+    @PUT
     @Path("/request")
     @RolesAllowed({Permission.Types.BUSINESSACCOUNT, Permission.Types.BUSINESSADMIN})
     @Consumes(MediaType.APPLICATION_JSON)

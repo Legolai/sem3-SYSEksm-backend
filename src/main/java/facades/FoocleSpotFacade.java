@@ -86,7 +86,15 @@ public class FoocleSpotFacade {
             query.setParameter("id", id);
             return query.getResultList();
         });
-
+        return SpotMenuDTO.listToDTOs(spotMenuList);
+    }
+    public List<SpotMenuDTO> getAllRelevantMenusForSpot(long id) {
+        List<SpotMenu> spotMenuList = executeWithClose(em -> {
+            TypedQuery<SpotMenu> query = em.createQuery("SELECT m FROM SpotMenu m WHERE m.fooclespot.id = :id AND m.pickupTimeTo > :today", SpotMenu.class);
+            query.setParameter("id", id);
+            query.setParameter("today", LocalDateTime.now());
+            return query.getResultList();
+        });
         return SpotMenuDTO.listToDTOs(spotMenuList);
     }
 
@@ -96,7 +104,6 @@ public class FoocleSpotFacade {
             query.setParameter("id", id);
             return query.getResultList();
         });
-
         return ScoutRequestDTO.listToDTOs(scoutRequestList);
     }
 

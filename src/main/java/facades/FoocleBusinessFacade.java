@@ -60,14 +60,26 @@ public class FoocleBusinessFacade {
         return new FoocleBusinessDTO(foocleBusiness);
     }
 
-    public List<ScoutRequestDTO> getAllRequests(long id) {
+    public List<ScoutRequestMenuDTO> getAllRequests(long id) {
         List<ScoutRequest> requests = executeWithClose(em -> {
             BusinessAccount ba = em.find(BusinessAccount.class, id);
-            TypedQuery<ScoutRequest> query2 = em.createQuery("SELECT s FROM ScoutRequest s WHERE s.spotmenu.fooclespot.cvr.id = :cvr ORDER BY s.spotmenu.pickupTimeTo", ScoutRequest.class);
+            TypedQuery<ScoutRequest> query2 = em.createQuery("SELECT s FROM ScoutRequest s INNER JOIN SpotMenu sp ON s.spotmenu.id = sp.id " +
+                    "WHERE s.spotmenu.fooclespot.cvr.id = :cvr ORDER BY s.spotmenu.pickupTimeTo", ScoutRequest.class);
             query2.setParameter("cvr", ba.getCvr().getId());
             return query2.getResultList();
         });
-        return ScoutRequestDTO.listToDTOs(requests);
+        return ScoutRequestMenuDTO.listToDTOs(requests);
+    }
+    public List<ScoutRequestMenuDTO> getAllRelevantRequests(long id) {
+        List<ScoutRequest> requests = executeWithClose(em -> {
+            BusinessAccount ba = em.find(BusinessAccount.class, id);
+            TypedQuery<ScoutRequest> query2 = em.createQuery("SELECT s FROM ScoutRequest s INNER JOIN SpotMenu sp ON s.spotmenu.id = sp.id " +
+                    "WHERE s.spotmenu.fooclespot.cvr.id = :cvr AND s.spotmenu.pickupTimeTo > :today ORDER BY s.spotmenu.pickupTimeTo", ScoutRequest.class);
+            query2.setParameter("cvr", ba.getCvr().getId());
+            query2.setParameter("today", LocalDateTime.now());
+            return query2.getResultList();
+        });
+        return ScoutRequestMenuDTO.listToDTOs(requests);
     }
 
     public boolean updateRequestStatus(long id, String status) {
