@@ -31,7 +31,7 @@ public class FoocleBusinessFacade {
 
     public BusinessAccountDTO getVeryfiedBusinessAccount(String email, String password) throws AuthenticationException {
         List<BusinessAccount> response = executeWithClose(em -> {
-            TypedQuery<BusinessAccount> query = em.createQuery("SELECT f FROM BusinessAccount f WHERE f.account.email = :email", BusinessAccount.class);
+            TypedQuery<BusinessAccount> query = em.createQuery("SELECT f FROM BusinessAccount f JOIN FoocleBusiness b ON f.cvr.id = b.id WHERE f.account.email = :email", BusinessAccount.class);
             query.setParameter("email", email);
             return query.getResultList();
         });
