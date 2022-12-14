@@ -33,4 +33,31 @@ public class ScoutRequestDTO {
         return scoutRequests.stream().map(ScoutRequestDTO::new).collect(Collectors.toList());
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public Long getSpotmenuID() {
+        return spotmenuID;
+    }
+
+    public Long getFooclescoutsID() {
+        return fooclescoutsID;
+    }
 }
